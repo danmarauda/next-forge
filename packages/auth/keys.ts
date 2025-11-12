@@ -1,16 +1,20 @@
-import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "zod";
+import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
 
 export const keys = () =>
   createEnv({
     server: {
-      WORKOS_API_KEY: z.string().min(1),
-      WORKOS_CLIENT_ID: z.string().min(1),
-      WORKOS_REDIRECT_URI: z.string().url(),
+      WORKOS_API_KEY: z.string().min(1).optional().or(z.literal('')),
+      WORKOS_CLIENT_ID: z.string().min(1).optional().or(z.literal('')),
+      WORKOS_REDIRECT_URI: z.string().url().optional().or(z.literal('')),
     },
     client: {
-      NEXT_PUBLIC_WORKOS_CLIENT_ID: z.string().min(1),
-      NEXT_PUBLIC_SITE_URL: z.string().url(),
+      NEXT_PUBLIC_WORKOS_CLIENT_ID: z
+        .string()
+        .min(1)
+        .optional()
+        .or(z.literal('')),
+      NEXT_PUBLIC_SITE_URL: z.string().url().optional().or(z.literal('')),
     },
     runtimeEnv: {
       WORKOS_API_KEY: process.env.WORKOS_API_KEY,
