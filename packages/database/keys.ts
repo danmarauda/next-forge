@@ -4,10 +4,10 @@ import { z } from 'zod';
 export const keys = () =>
   createEnv({
     server: {
-      CONVEX_DEPLOYMENT: z.string().min(1).optional().or(z.literal('')),
+      CONVEX_DEPLOYMENT: z.string().optional(),
     },
     client: {
-      NEXT_PUBLIC_CONVEX_URL: z.string().url().optional().or(z.literal('')),
+      NEXT_PUBLIC_CONVEX_URL: z.string().optional(),
     },
     runtimeEnv: {
       CONVEX_DEPLOYMENT: process.env.CONVEX_DEPLOYMENT,
