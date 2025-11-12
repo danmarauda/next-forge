@@ -56,12 +56,14 @@ jobs:
       - name: Build applications
         run: pnpm turbo build --filter='./apps/*'
         env:
-          WORKOS_API_KEY: ${{ secrets.WORKOS_API_KEY || 'dummy' }}
-          WORKOS_CLIENT_ID: ${{ secrets.WORKOS_CLIENT_ID || 'dummy' }}
+          SKIP_ENV_VALIDATION: "1"
+          WORKOS_API_KEY: ${{ secrets.WORKOS_API_KEY || 'sk_dummy_key' }}
+          WORKOS_CLIENT_ID: ${{ secrets.WORKOS_CLIENT_ID || 'client_dummy' }}
+          NEXT_PUBLIC_WORKOS_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_WORKOS_CLIENT_ID || 'client_dummy' }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
           WORKOS_REDIRECT_URI: ${{ secrets.WORKOS_REDIRECT_URI || 'http://localhost:3000/auth/callback' }}
           CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT || 'dummy' }}
           NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL || 'dummy' }}
-          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
 
       - name: Verify build outputs
         run: |
