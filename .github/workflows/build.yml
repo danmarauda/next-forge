@@ -1,0 +1,87 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm turbo build --filter='./packages/*'
+        env:
+          # Set dummy values for build-time env checks
+          WORKOS_API_KEY: ${{ secrets.WORKOS_API_KEY || 'dummy' }}
+          WORKOS_CLIENT_ID: ${{ secrets.WORKOS_CLIENT_ID || 'dummy' }}
+          WORKOS_REDIRECT_URI: ${{ secrets.WORKOS_REDIRECT_URI || 'http://localhost:3000/auth/callback' }}
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT || 'dummy' }}
+          NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL || 'dummy' }}
+
+      - name: Build applications
+        run: pnpm turbo build --filter='./apps/*'
+        env:
+          WORKOS_API_KEY: ${{ secrets.WORKOS_API_KEY || 'dummy' }}
+          WORKOS_CLIENT_ID: ${{ secrets.WORKOS_CLIENT_ID || 'dummy' }}
+          WORKOS_REDIRECT_URI: ${{ secrets.WORKOS_REDIRECT_URI || 'http://localhost:3000/auth/callback' }}
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT || 'dummy' }}
+          NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL || 'dummy' }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000' }}
+
+      - name: Verify build outputs
+        run: |
+          if [ ! -d "apps/app/.next" ]; then
+            echo "❌ apps/app/.next not found"
+            exit 1
+          fi
+          if [ ! -d "apps/api/.next" ]; then
+            echo "❌ apps/api/.next not found"
+            exit 1
+          fi
+          echo "✅ All builds completed successfully"
+
+      - name: Upload build artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            apps/*/.next
+            packages/*/dist
+          retention-days: 7
+

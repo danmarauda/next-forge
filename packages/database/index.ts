@@ -1,21 +1,18 @@
-import "server-only";
+/**
+ * @repo/database - Convex Backend Package
+ *
+ * This package exports the Convex client and all backend functions.
+ * Use this in server components and API routes.
+ */
 
-import { neonConfig } from "@neondatabase/serverless";
-import { PrismaNeon } from "@prisma/adapter-neon";
-import ws from "ws";
-import { PrismaClient } from "./generated/client";
-import { keys } from "./keys";
+// Export Convex API for server-side usage
+export { api } from "./convex/_generated/api";
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
+// Export Convex types
+export type { Doc, Id } from "./convex/_generated/dataModel";
 
-neonConfig.webSocketConstructor = ws;
+// Export environment keys
+export { keys } from "./keys";
 
-const adapter = new PrismaNeon({ connectionString: keys().DATABASE_URL });
-
-export const database = globalForPrisma.prisma || new PrismaClient({ adapter });
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = database;
-}
-
-export * from "./generated/client";
+// Re-export commonly used Convex utilities
+export { ConvexError } from "convex/values";

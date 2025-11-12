@@ -18,33 +18,77 @@
     "boundaries": "turbo boundaries",
     "bump-deps": "npx npm-check-updates --deep -u -x recharts && pnpm install",
     "bump-ui": "npx shadcn@latest add --all --overwrite -c packages/design-system",
-    "migrate": "cd packages/database && npx prisma format && npx prisma generate && npx prisma db push",
-    "clean": "git clean -xdf node_modules"
+    "convex:dev": "cd packages/database && convex dev",
+    "convex:deploy": "cd packages/database && convex deploy",
+    "sync:env:dev": "tsx scripts/sync-vercel-env.ts development",
+    "sync:env:staging": "tsx scripts/sync-vercel-env.ts staging",
+    "sync:env:prod": "tsx scripts/sync-vercel-env.ts production",
+    "sync:env:all": "tsx scripts/sync-vercel-env.ts all",
+    "setup:cicd": "tsx scripts/setup-cicd.ts",
+    "setup:domain": "tsx scripts/setup-custom-domain.ts",
+    "clean": "git clean -xdf node_modules",
+    "validate:env": "tsx scripts/validate-env.ts",
+    "health:check": "curl -f http://localhost:3002/api/health || exit 1",
+    "setup:workos": "tsx scripts/setup-workos.ts",
+    "setup:workos:complete": "tsx scripts/setup-workos-complete.ts",
+    "test:workos": "tsx scripts/workos-test.ts",
+    "test:workos:complete": "tsx scripts/test-workos-complete.ts",
+    "check:workos:practices": "tsx scripts/configure-workos-best-practices.ts",
+    "implement:workos": "tsx scripts/implement-workos-features.ts",
+    "test:workos:all": "tsx scripts/test-all-workos-features.ts",
+    "configure:ara-group": "tsx scripts/configure-ara-group-workos.ts",
+    "setup:ara-super-admins": "tsx scripts/setup-ara-group-super-admins.ts",
+    "setup:ara-organizations": "tsx scripts/setup-all-ara-organizations.ts",
+    "setup:ara-complete": "tsx scripts/setup-ara-complete.ts",
+    "setup:convex-env": "tsx scripts/setup-convex-env.ts",
+    "implement:all": "tsx scripts/implement-all.ts",
+    "list:ara-organizations": "tsx scripts/list-ara-group-organizations.ts"
   },
   "devDependencies": {
     "@auto-it/first-time-contributor": "^11.3.0",
-    "@biomejs/biome": "2.3.1",
+    "@biomejs/biome": "2.3.5",
     "@repo/typescript-config": "workspace:*",
-    "@turbo/gen": "^2.5.8",
+    "@turbo/gen": "^2.6.1",
     "@types/node": "^24.9.1",
+    "@workos-inc/node": "^7.72.2",
+    "dotenv": "^16.4.7",
     "tsup": "^8.5.0",
-    "turbo": "^2.5.8",
+    "tsx": "^4.20.6",
+    "turbo": "^2.6.1",
     "typescript": "^5.9.3",
-    "ultracite": "6.0.3",
-    "vitest": "^4.0.3"
+    "ultracite": "6.3.2",
+    "vitest": "^4.0.8"
   },
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@10.19.0",
+  "packageManager": "pnpm@10.21.0",
   "dependencies": {
     "@clack/prompts": "^0.11.0",
     "commander": "^14.0.2"
   },
   "pnpm": {
     "overrides": {
-      "parse5": "^7.2.1"
-    }
+      "parse5": "^7.2.1",
+      "@modelcontextprotocol/sdk": "^1.17.1"
+    },
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "zod": "^3.23.8 || ^4.0.0",
+        "ai": "^3.4.7 || ^4.0.0 || ^5.0.0",
+        "@modelcontextprotocol/sdk": "^1.12.0 || ^1.17.1",
+        "next": "16"
+      }
+    },
+    "ignoredBuiltDependencies": [
+      "@clerk/shared",
+      "@prisma/engines",
+      "@sentry/cli",
+      "core-js",
+      "core-js-pure",
+      "prisma",
+      "sharp"
+    ]
   },
   "type": "module"
 }

@@ -4,27 +4,39 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "scripts": {
-    "analyze": "prisma generate --no-hints --schema=./prisma/schema.prisma",
-    "build": "prisma generate --no-hints --schema=./prisma/schema.prisma",
-    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "analyze": "convex dev --until-success",
+    "build": "convex deploy --cmd 'echo Build complete'",
+    "clean": "git clean -xdf .cache .turbo dist node_modules convex/_generated",
+    "dev": "convex dev",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^1.0.2",
-    "@prisma/adapter-neon": "6.18.0",
-    "@prisma/client": "6.18.0",
+    "@convex-dev/aggregate": "^0.1.25",
+    "@convex-dev/better-auth": "^0.9.7",
+    "@convex-dev/rate-limiter": "^0.3.0",
+    "@convex-dev/react-query": "0.0.0-alpha.11",
+    "@convex-dev/resend": "^0.1.13",
+    "@react-email/components": "^0.5.7",
+    "@react-email/render": "^1.4.0",
     "@t3-oss/env-nextjs": "^0.13.8",
+    "@workos-inc/node": "^7.72.2",
+    "better-auth": "^1.3.34",
+    "better-auth-convex": "^0.4.2",
+    "common-tags": "^1.8.2",
+    "convex": "1.29.0",
+    "convex-ents": "^0.16.0",
+    "convex-helpers": "0.1.104",
+    "react": "19.2.0",
     "server-only": "^0.0.1",
-    "undici": "^7.16.0",
-    "ws": "^8.18.3",
-    "zod": "^4.1.12"
+    "superjson": "^2.2.5",
+    "ts-essentials": "10.1.1",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
+    "@types/common-tags": "^1.8.4",
     "@types/node": "24.9.1",
-    "@types/ws": "^8.18.1",
-    "bufferutil": "^4.0.9",
-    "prisma": "6.18.0",
+    "@types/react": "^19.2.3",
     "typescript": "^5.9.3"
   }
 }

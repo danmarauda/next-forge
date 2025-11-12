@@ -4,29 +4,19 @@ import { z } from "zod";
 export const keys = () =>
   createEnv({
     server: {
-      CLERK_SECRET_KEY: z.string().startsWith("sk_").optional(),
-      CLERK_WEBHOOK_SECRET: z.string().startsWith("whsec_").optional(),
+      WORKOS_API_KEY: z.string().min(1),
+      WORKOS_CLIENT_ID: z.string().min(1),
+      WORKOS_REDIRECT_URI: z.string().url(),
     },
     client: {
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z
-        .string()
-        .startsWith("pk_")
-        .optional(),
-      NEXT_PUBLIC_CLERK_SIGN_IN_URL: z.string().startsWith("/"),
-      NEXT_PUBLIC_CLERK_SIGN_UP_URL: z.string().startsWith("/"),
-      NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: z.string().startsWith("/"),
-      NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: z.string().startsWith("/"),
+      NEXT_PUBLIC_WORKOS_CLIENT_ID: z.string().min(1),
+      NEXT_PUBLIC_SITE_URL: z.string().url(),
     },
     runtimeEnv: {
-      CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
-      CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
-        process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-      NEXT_PUBLIC_CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL,
-      NEXT_PUBLIC_CLERK_SIGN_UP_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL,
-      NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL:
-        process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL,
-      NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL:
-        process.env.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL,
+      WORKOS_API_KEY: process.env.WORKOS_API_KEY,
+      WORKOS_CLIENT_ID: process.env.WORKOS_CLIENT_ID,
+      WORKOS_REDIRECT_URI: process.env.WORKOS_REDIRECT_URI,
+      NEXT_PUBLIC_WORKOS_CLIENT_ID: process.env.NEXT_PUBLIC_WORKOS_CLIENT_ID,
+      NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     },
   });

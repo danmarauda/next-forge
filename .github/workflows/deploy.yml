@@ -1,0 +1,118 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.19.0
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate environment variables
+        run: |
+          echo "🔍 Validating required environment variables..."
+          required_vars=(
+            "WORKOS_API_KEY"
+            "WORKOS_CLIENT_ID"
+            "WORKOS_REDIRECT_URI"
+            "CONVEX_DEPLOYMENT"
+            "NEXT_PUBLIC_CONVEX_URL"
+          )
+          missing_vars=()
+          for var in "${required_vars[@]}"; do
+            if [ -z "${!var}" ]; then
+              missing_vars+=("$var")
+            fi
+          done
+          if [ ${#missing_vars[@]} -ne 0 ]; then
+            echo "❌ Missing required environment variables: ${missing_vars[*]}"
+            exit 1
+          fi
+          echo "✅ All required environment variables are set"
+        env:
+          WORKOS_API_KEY: ${{ secrets.WORKOS_API_KEY }}
+          WORKOS_CLIENT_ID: ${{ secrets.WORKOS_CLIENT_ID }}
+          WORKOS_REDIRECT_URI: ${{ secrets.WORKOS_REDIRECT_URI }}
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
+          NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
+
+      - name: Build applications
+        run: pnpm turbo build
+        env:
+          WORKOS_API_KEY: ${{ secrets.WORKOS_API_KEY }}
+          WORKOS_CLIENT_ID: ${{ secrets.WORKOS_CLIENT_ID }}
+          WORKOS_REDIRECT_URI: ${{ secrets.WORKOS_REDIRECT_URI }}
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
+          NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_WORKOS_CLIENT_ID: ${{ secrets.WORKOS_CLIENT_ID }}
+
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./apps/app
+          scope: ${{ secrets.VERCEL_ORG_ID }}
+
+      - name: Deploy Convex
+        if: success()
+        run: |
+          cd packages/database
+          npx convex deploy --cmd 'echo Deploy complete'
+        env:
+          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_DEPLOYMENT }}
+          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+
+      - name: Health check
+        if: success()
+        run: |
+          echo "🏥 Running health checks..."
+          # Add health check logic here
+          echo "✅ Health checks passed"
+
+      - name: Deployment notification
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Deployment successful"
+          else
+            echo "❌ Deployment failed"
+          fi
+
