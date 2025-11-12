@@ -1,13 +1,13 @@
-import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "zod";
+import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
 
 export const keys = () =>
   createEnv({
     server: {
-      CONVEX_DEPLOYMENT: z.string().min(1),
+      CONVEX_DEPLOYMENT: z.string().min(1).optional().or(z.literal('')),
     },
     client: {
-      NEXT_PUBLIC_CONVEX_URL: z.string().url(),
+      NEXT_PUBLIC_CONVEX_URL: z.string().url().optional().or(z.literal('')),
     },
     runtimeEnv: {
       CONVEX_DEPLOYMENT: process.env.CONVEX_DEPLOYMENT,
