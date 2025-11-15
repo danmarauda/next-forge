@@ -206,6 +206,46 @@ scripts/                # Setup and automation scripts
 6. **Build**: Verify with `pnpm build`
 7. **Environment Sync**: Use `pnpm sync:env:[env]` for deployments
 
+## 📋 README.md Maintenance (CRITICAL)
+
+**IMPORTANT**: The `README.md` file is the primary source of truth for this project. It **MUST** be kept up to date.
+
+### When to Update README.md
+
+You **MUST** update `README.md` whenever you:
+
+1. **Add or modify features** - Update "Features & Implementation Status" section
+2. **Add packages or integrations** - Update "Packages & Integrations" and "Integrations & Services" sections
+3. **Change architecture** - Update "Architecture" section
+4. **Modify setup/configuration** - Update "Getting Started" section
+5. **Add or change scripts** - Update "Available Scripts" section
+6. **Update implementation status** - Change status indicators (✅, ⚠️, ❌)
+
+### Status Indicators
+
+Use consistently:
+- ✅ = Complete/Implemented
+- ⚠️ = In Progress/Partial
+- ❌ = Not Started/Not Implemented
+
+### Update Checklist
+
+Before completing any task:
+- [ ] README.md updated with all changes
+- [ ] Status indicators are accurate
+- [ ] All new features/packages documented
+- [ ] Commands and scripts listed
+- [ ] Environment variables documented
+- [ ] Structure and formatting consistent
+
+### Additional Resources
+
+- See `CRUSH.md` for detailed CRUSH agent instructions
+- See `CLAUDE.md` for detailed Claude agent instructions
+- See `README.md` for the complete project documentation
+
+**Remember**: Code changes without documentation updates are incomplete. Keep README.md synchronized with code changes!
+
 ## Package Dependencies
 
 Key internal dependencies to understand:
