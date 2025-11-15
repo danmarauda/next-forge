@@ -14,9 +14,7 @@ export type {
 
 // Export WorkOS client (for server-side usage)
 export { WorkOS } from '@workos-inc/node';
+
 // Export server-side auth helpers
-// Temporarily disabled for visual testing
-// export { workosAuth, workosAuthGuard as auth } from './src/workos-client';
-// export * from './src/workos-rsc';
-// export { getWorkOSSessionUser as currentUser } from './src/workos-rsc';
+export { currentUser, auth } from './src/server-helpers';
 

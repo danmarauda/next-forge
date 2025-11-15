@@ -1,5 +1,6 @@
 import { v } from 'convex/values';
 import { z } from 'zod';
+import { zid } from 'convex-helpers/server/zod';
 import type { Id } from './_generated/dataModel';
 import {
   createAuthMutation,
@@ -10,8 +11,8 @@ import {
 // List todos with pagination and filtering
 export const list = createAuthPaginatedQuery()({
   args: {
-    completed: v.optional(v.boolean()),
-    projectId: v.optional(v.id('projects')),
+    completed: z.boolean().optional(),
+    projectId: zid('projects').optional(),
   },
   handler: async (ctx, args) => {
     const { table, user } = ctx;
@@ -68,14 +69,12 @@ export const list = createAuthPaginatedQuery()({
 // Create a new todo
 export const create = createAuthMutation()({
   args: {
-    title: v.string(),
-    description: v.optional(v.string()),
-    priority: v.optional(
-      v.union(v.literal('low'), v.literal('medium'), v.literal('high')),
-    ),
-    dueDate: v.optional(v.number()),
-    projectId: v.optional(v.id('projects')),
-    tagIds: v.optional(v.array(v.id('tags'))),
+    title: z.string(),
+    description: z.string().optional(),
+    priority: z.enum(['low', 'medium', 'high']).optional(),
+    dueDate: z.number().optional(),
+    projectId: zid('projects').optional(),
+    tagIds: z.array(zid('tags')).optional(),
   },
   handler: async (ctx, args) => {
     const { table, user } = ctx;
@@ -113,7 +112,7 @@ export const create = createAuthMutation()({
 // Toggle todo completion status
 export const toggleComplete = createAuthMutation()({
   args: {
-    id: v.id('todos'),
+    id: zid('todos'),
   },
   handler: async (ctx, args) => {
     const { table, user } = ctx;
@@ -136,7 +135,7 @@ export const toggleComplete = createAuthMutation()({
 // Delete a todo (soft delete)
 export const deleteTodo = createAuthMutation()({
   args: {
-    id: v.id('todos'),
+    id: zid('todos'),
   },
   handler: async (ctx, args) => {
     const { table, user } = ctx;
@@ -158,7 +157,7 @@ export const deleteTodo = createAuthMutation()({
 // Get a single todo by ID
 export const get = createAuthQuery()({
   args: {
-    id: v.id('todos'),
+    id: zid('todos'),
   },
   handler: async (ctx, args) => {
     const { table, user } = ctx;
@@ -201,15 +200,13 @@ export const get = createAuthQuery()({
 // Update a todo
 export const update = createAuthMutation()({
   args: {
-    id: v.id('todos'),
-    title: v.optional(v.string()),
-    description: v.optional(v.string()),
-    completed: v.optional(v.boolean()),
-    priority: v.optional(
-      v.union(v.literal('low'), v.literal('medium'), v.literal('high')),
-    ),
-    dueDate: v.optional(v.number()),
-    projectId: v.optional(v.union(v.id('projects'), v.null())),
+    id: zid('todos'),
+    title: z.string().optional(),
+    description: z.string().optional(),
+    completed: z.boolean().optional(),
+    priority: z.enum(['low', 'medium', 'high']).optional(),
+    dueDate: z.number().optional(),
+    projectId: zid('projects').nullable().optional(),
   },
   handler: async (ctx, args) => {
     const { table, user } = ctx;

@@ -13,15 +13,6 @@ export const getSessionsByToken = createPublicQuery()({
   args: {
     token: z.string(),
   },
-  returns: z.array(
-    z.object({
-      _id: zid('session'),
-      userId: zid('user'),
-      token: z.string(),
-      expiresAt: z.number(),
-      activeOrganizationId: zid('organization').nullable(),
-    }),
-  ),
   handler: async (ctx, args) => {
     // Use ctx.table() in query context
     const sessions = await ctx.table('session').get('token', args.token);
@@ -41,15 +32,6 @@ export const getSessionsByUserId = createPublicQuery()({
   args: {
     userId: zid('user'),
   },
-  returns: z.array(
-    z.object({
-      _id: zid('session'),
-      userId: zid('user'),
-      token: z.string(),
-      expiresAt: z.number(),
-      activeOrganizationId: zid('organization').nullable(),
-    }),
-  ),
   handler: async (ctx, args) => {
     // Use ctx.table() in query context
     const sessions = await ctx.table('session').get('userId', args.userId);
@@ -73,9 +55,6 @@ export const getAuthorizationUrl = createPublicAction()({
     redirectUri: z.string().optional(),
     state: z.string().optional(),
   },
-  returns: z.object({
-    authorizationUrl: z.string(),
-  }),
   handler: async (ctx, args) => {
     const env = getEnv();
     const workos = getWorkOS();
@@ -97,18 +76,6 @@ export const authenticateUser = createPublicAction()({
   args: {
     code: z.string(),
   },
-  returns: z.object({
-    user: z.object({
-      _id: zid('user'),
-      email: z.string(),
-      name: z.string(),
-    }),
-    session: z.object({
-      _id: zid('session'),
-      token: z.string(),
-    }),
-    accessToken: z.string(),
-  }),
   handler: async (ctx, args) => {
     const env = getEnv();
     const workos = getWorkOS();
@@ -279,26 +246,6 @@ export const getCurrentUserFromToken = createPublicQuery()({
   args: {
     token: z.string(),
   },
-  returns: z.union([
-    z.object({
-      _id: zid('user'),
-      email: z.string(),
-      name: z.string(),
-      image: z.string().nullable(),
-      role: z.string().nullable(),
-      activeOrganization: z
-        .object({
-          id: zid('organization'),
-          name: z.string(),
-          slug: z.string(),
-          role: z.string(),
-        })
-        .nullable(),
-      isAdmin: z.boolean(),
-      personalOrganizationId: zid('organization').optional(),
-    }),
-    z.null(),
-  ]),
   handler: async (ctx, args) => {
     // Find session by token - use ctx.table() in query context
     const sessions = await ctx.table('session').get('token', args.token);
@@ -372,7 +319,6 @@ export const signOut = createPublicAction()({
   args: {
     token: z.string(),
   },
-  returns: z.object({ success: z.boolean() }),
   handler: async (ctx, args) => {
     const generatedApiInternal4 = await import('./_generated/api');
 
@@ -412,7 +358,6 @@ export const handleWebhook = createPublicAction()({
     event: z.string(),
     data: z.any(),
   },
-  returns: z.object({ success: z.boolean() }),
   handler: async (ctx, args) => {
     const env = getEnv();
     const generatedApiInternal5 = await import('./_generated/api');

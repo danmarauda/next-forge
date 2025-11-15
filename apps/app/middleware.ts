@@ -3,6 +3,7 @@ import {
   noseconeOptionsWithToolbar,
   securityMiddleware,
 } from '@repo/security/middleware';
+import { authMiddleware } from '@repo/auth/middleware';
 import { createNEMO } from '@rescale/nemo';
 import {
   type NextMiddleware,
@@ -103,12 +104,12 @@ const securityHeaders = env.FLAGS_SECRET
   ? securityMiddleware(noseconeOptionsWithToolbar)
   : securityMiddleware(noseconeOptions);
 
-// Compose middleware using NEMO (for apps without Clerk)
-// Org subdomain detection runs first, then security headers
+// Compose middleware using NEMO
+// Order: org subdomain detection -> auth validation -> security headers
 const composedMiddleware = createNEMO(
   {},
   {
-    before: [orgSubdomainMiddleware],
+    before: [orgSubdomainMiddleware, authMiddleware],
   },
 );
 

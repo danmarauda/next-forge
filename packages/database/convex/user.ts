@@ -6,32 +6,11 @@ import { createAuthMutation, createPublicQuery } from './functions';
 export const getIsAuthenticated = createPublicQuery({
   publicOnly: true,
 })({
-  returns: z.boolean(),
   handler: async (ctx) => !!(await ctx.auth.getUserIdentity()),
 });
 
 // Get session user (minimal data)
 export const getSessionUser = createPublicQuery()({
-  returns: z.union([
-    z.object({
-      id: zid('user'),
-      activeOrganization: z
-        .object({
-          id: zid('organization'),
-          logo: z.string().nullish(),
-          name: z.string(),
-          role: z.string(),
-          slug: z.string(),
-        })
-        .nullable(),
-      image: z.string().nullish(),
-      isAdmin: z.boolean(),
-      name: z.string().optional(),
-      personalOrganizationId: zid('organization').optional(),
-      plan: z.string().optional(),
-    }),
-    z.null(),
-  ]),
   handler: async ({ user: userEnt }) => {
     if (!userEnt) {
       return null;
@@ -53,26 +32,6 @@ export const getSessionUser = createPublicQuery()({
 
 // Get full user data for the authenticated user
 export const getCurrentUser = createPublicQuery()({
-  returns: z.union([
-    z.object({
-      id: zid('user'),
-      activeOrganization: z
-        .object({
-          id: zid('organization'),
-          logo: z.string().nullish(),
-          name: z.string(),
-          role: z.string(),
-          slug: z.string(),
-        })
-        .nullable(),
-      image: z.string().nullish(),
-      isAdmin: z.boolean(),
-      name: z.string().optional(),
-      personalOrganizationId: zid('organization').optional(),
-      plan: z.string().optional(),
-    }),
-    z.null(),
-  ]),
   handler: async (ctx) => {
     const { user } = ctx;
 
@@ -98,7 +57,6 @@ export const updateSettings = createAuthMutation()({
     bio: z.string().optional(),
     name: z.string().optional(),
   },
-  returns: z.object({ success: z.boolean() }),
   handler: async (ctx, args) => {
     const { user } = ctx;
     const { bio, name } = args;

@@ -42,7 +42,10 @@
     "setup:ara-complete": "tsx scripts/setup-ara-complete.ts",
     "setup:convex-env": "tsx scripts/setup-convex-env.ts",
     "implement:all": "tsx scripts/implement-all.ts",
-    "list:ara-organizations": "tsx scripts/list-ara-group-organizations.ts"
+    "list:ara-organizations": "tsx scripts/list-ara-group-organizations.ts",
+    "setup:workos:auth": "tsx scripts/setup-workos-auth.ts",
+    "verify:workos": "tsx scripts/verify-workos-setup.ts",
+    "create:ara:orgs": "tsx scripts/create-ara-organizations.ts"
   },
   "devDependencies": {
     "@auto-it/first-time-contributor": "^11.3.0",
