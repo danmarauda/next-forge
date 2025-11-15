@@ -1,23 +1,23 @@
-import type { WorkOS } from "@workos-inc/node";
-import type { BaseWorkOSService, WorkOSServiceConfig } from "../types";
+import type { WorkOS } from '@workos-inc/node';
+import type { BaseWorkOSService, WorkOSServiceConfig } from '../types';
 
 /**
  * SSO Service
- * 
+ *
  * Handles WorkOS SSO operations (SAML, OIDC, OAuth).
  * Feature flag: workos.sso.enabled
  */
 export class SSOService implements BaseWorkOSService {
   constructor(
     private client: WorkOS,
-    private config: WorkOSServiceConfig
+    private config: WorkOSServiceConfig,
   ) {}
 
   isEnabled(): boolean {
     // Check environment variable override
     const envEnabled = process.env.NEXT_PUBLIC_WORKOS_SSO_ENABLED;
     if (envEnabled !== undefined) {
-      return envEnabled === "true" || envEnabled === "1";
+      return envEnabled === 'true' || envEnabled === '1';
     }
     return this.config.enabled;
   }
@@ -37,7 +37,7 @@ export class SSOService implements BaseWorkOSService {
     state?: string;
   }): Promise<string> {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS SSO is not enabled");
+      throw new Error('WorkOS SSO is not enabled');
     }
 
     const env = process.env;
@@ -52,7 +52,7 @@ export class SSOService implements BaseWorkOSService {
    */
   async authenticateWithCode(code: string) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS SSO is not enabled");
+      throw new Error('WorkOS SSO is not enabled');
     }
 
     const env = process.env;
@@ -67,7 +67,7 @@ export class SSOService implements BaseWorkOSService {
    */
   async getOrganization(organizationId: string) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS SSO is not enabled");
+      throw new Error('WorkOS SSO is not enabled');
     }
 
     return this.client.organizations.getOrganization(organizationId);
@@ -76,12 +76,9 @@ export class SSOService implements BaseWorkOSService {
   /**
    * List organizations
    */
-  async listOrganizations(options?: {
-    domains?: string[];
-    limit?: number;
-  }) {
+  async listOrganizations(options?: { domains?: string[]; limit?: number }) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS SSO is not enabled");
+      throw new Error('WorkOS SSO is not enabled');
     }
 
     return this.client.organizations.listOrganizations(options);
@@ -90,12 +87,9 @@ export class SSOService implements BaseWorkOSService {
   /**
    * Create organization
    */
-  async createOrganization(organization: {
-    name: string;
-    domains?: string[];
-  }) {
+  async createOrganization(organization: { name: string; domains?: string[] }) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS SSO is not enabled");
+      throw new Error('WorkOS SSO is not enabled');
     }
 
     return this.client.organizations.createOrganization(organization);
@@ -109,15 +103,15 @@ export class SSOService implements BaseWorkOSService {
     updates: {
       name?: string;
       domains?: string[];
-    }
+    },
   ) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS SSO is not enabled");
+      throw new Error('WorkOS SSO is not enabled');
     }
 
     return this.client.organizations.updateOrganization(
       organizationId,
-      updates
+      updates,
     );
   }
 
@@ -126,10 +120,9 @@ export class SSOService implements BaseWorkOSService {
    */
   async deleteOrganization(organizationId: string) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS SSO is not enabled");
+      throw new Error('WorkOS SSO is not enabled');
     }
 
     return this.client.organizations.deleteOrganization(organizationId);
   }
 }
-

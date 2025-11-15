@@ -1,15 +1,13 @@
-"use client";
+'use client';
 
-import { use } from "react";
-import type { Flag } from "flags/react";
-import * as flags from "./index";
+import type { Flag } from 'flags/react';
+import { use } from 'react';
+import * as flags from './index';
 
 /**
  * Hook to check a single feature flag
  */
-export function useFeatureFlag<T extends Flag<boolean>>(
-  flag: T
-): boolean {
+export function useFeatureFlag<T extends Flag<boolean>>(flag: T): boolean {
   return use(flag);
 }
 
@@ -17,14 +15,14 @@ export function useFeatureFlag<T extends Flag<boolean>>(
  * Hook to check multiple feature flags
  */
 export function useFeatureFlags<T extends Record<string, Flag<boolean>>>(
-  flagMap: T
+  flagMap: T,
 ): Record<keyof T, boolean> {
   const result = {} as Record<keyof T, boolean>;
-  
+
   for (const [key, flag] of Object.entries(flagMap)) {
     result[key as keyof T] = use(flag);
   }
-  
+
   return result;
 }
 
@@ -62,4 +60,3 @@ export function useWorkOSFeature(feature: keyof typeof flags.workosFlags) {
 export function useAppFeature(feature: keyof typeof flags.appFlags) {
   return useFeatureFlag(flags.appFlags[feature]);
 }
-

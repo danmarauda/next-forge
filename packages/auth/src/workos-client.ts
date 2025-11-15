@@ -20,7 +20,7 @@ export const workosAuth = {
         redirectUri:
           options?.redirectUri || `${env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
         state: options?.state,
-      }
+      },
     );
 
     window.location.href = authorizationUrl;

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useMyPresence, useOthers } from "@repo/collaboration/hooks";
-import { useEffect } from "react";
+import { useMyPresence, useOthers } from '@repo/collaboration/hooks';
+import { useEffect } from 'react';
 
 const Cursor = ({
   name,
@@ -77,12 +77,12 @@ export const Cursors = () => {
       });
     };
 
-    document.body.addEventListener("pointermove", onPointerMove);
-    document.body.addEventListener("pointerleave", onPointerLeave);
+    document.body.addEventListener('pointermove', onPointerMove);
+    document.body.addEventListener('pointerleave', onPointerLeave);
 
     return () => {
-      document.body.removeEventListener("pointermove", onPointerMove);
-      document.body.removeEventListener("pointerleave", onPointerLeave);
+      document.body.removeEventListener('pointermove', onPointerMove);
+      document.body.removeEventListener('pointerleave', onPointerLeave);
     };
   }, [updateMyPresence]);
 

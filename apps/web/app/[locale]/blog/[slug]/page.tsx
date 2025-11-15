@@ -1,21 +1,21 @@
-import { ArrowLeftIcon } from "@radix-ui/react-icons";
-import { blog } from "@repo/cms";
-import { Body } from "@repo/cms/components/body";
-import { CodeBlock } from "@repo/cms/components/code-block";
-import { Feed } from "@repo/cms/components/feed";
-import { Image } from "@repo/cms/components/image";
-import { TableOfContents } from "@repo/cms/components/toc";
-import { JsonLd } from "@repo/seo/json-ld";
-import { createMetadata } from "@repo/seo/metadata";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Sidebar } from "@/components/sidebar";
-import { env } from "@/env";
+import { ArrowLeftIcon } from '@radix-ui/react-icons';
+import { blog } from '@repo/cms';
+import { Body } from '@repo/cms/components/body';
+import { CodeBlock } from '@repo/cms/components/code-block';
+import { Feed } from '@repo/cms/components/feed';
+import { Image } from '@repo/cms/components/image';
+import { TableOfContents } from '@repo/cms/components/toc';
+import { JsonLd } from '@repo/seo/json-ld';
+import { createMetadata } from '@repo/seo/metadata';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { Sidebar } from '@/components/sidebar';
+import { env } from '@/env';
 
-const protocol = env.VERCEL_PROJECT_PRODUCTION_URL?.startsWith("https")
-  ? "https"
-  : "http";
+const protocol = env.VERCEL_PROJECT_PRODUCTION_URL?.startsWith('https')
+  ? 'https'
+  : 'http';
 const url = new URL(`${protocol}://${env.VERCEL_PROJECT_PRODUCTION_URL}`);
 
 type BlogPostProperties = {
@@ -54,7 +54,7 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
     <Feed queries={[blog.postQuery(slug)]}>
       {/* biome-ignore lint/suspicious/useAwait: "Server Actions must be async" */}
       {async ([data]) => {
-        "use server";
+        'use server';
 
         const page = data.blog.posts.item;
 
@@ -66,13 +66,13 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
           <>
             <JsonLd
               code={{
-                "@type": "BlogPosting",
-                "@context": "https://schema.org",
+                '@type': 'BlogPosting',
+                '@context': 'https://schema.org',
                 datePublished: page.date,
                 description: page.description,
                 mainEntityOfPage: {
-                  "@type": "WebPage",
-                  "@id": new URL(`/blog/${page._slug}`, url).toString(),
+                  '@type': 'WebPage',
+                  '@id': new URL(`/blog/${page._slug}`, url).toString(),
                 },
                 headline: page._title,
                 image: page.image.url,
@@ -100,7 +100,7 @@ const BlogPost = async ({ params }: BlogPostProperties) => {
                     </p>
                     {page.image ? (
                       <Image
-                        alt={page.image.alt ?? ""}
+                        alt={page.image.alt ?? ''}
                         className="my-16 h-full w-full rounded-xl"
                         height={page.image.height}
                         priority

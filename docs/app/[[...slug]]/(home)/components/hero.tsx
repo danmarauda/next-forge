@@ -1,9 +1,9 @@
-import Link from "next/link";
-import type { ComponentProps } from "react";
-import { Button } from "@/components/ui/button";
-import { Installer } from "./installer";
+import Link from 'next/link';
+import type { ComponentProps } from 'react';
+import { Button } from '@/components/ui/button';
+import { Installer } from './installer';
 
-const NextLogo = (props: ComponentProps<"svg">) => (
+const NextLogo = (props: ComponentProps<'svg'>) => (
   <svg
     viewBox=".5 -.2 1023 1024.1"
     xmlns="http://www.w3.org/2000/svg"
@@ -15,7 +15,7 @@ const NextLogo = (props: ComponentProps<"svg">) => (
   </svg>
 );
 
-const TurborepoLogo = (props: ComponentProps<"svg">) => (
+const TurborepoLogo = (props: ComponentProps<'svg'>) => (
   <svg
     fill="none"
     viewBox="0 0 36 36"
@@ -64,9 +64,9 @@ export const Hero = () => (
       </span>
     </a>
     <h1 className="max-w-3xl text-balance text-center font-semibold text-4xl leading-tight tracking-tighter! sm:text-5xl md:max-w-4xl md:text-6xl lg:leading-[1.1]">
-      Production-grade{" "}
+      Production-grade{' '}
       <TurborepoLogo className="pointer-events-none mx-1.5 inline-block h-8 w-auto translate-y-0.5 select-none align-baseline sm:h-[38px] md:h-[48px] md:translate-y-1" />
-      Turborepo template for{" "}
+      Turborepo template for{' '}
       <NextLogo className="pointer-events-none mx-1.5 inline-block h-8 w-auto translate-y-0.5 select-none align-baseline sm:h-[38px] md:h-[48px] md:translate-y-1 dark:invert" />
       Next.js apps
     </h1>

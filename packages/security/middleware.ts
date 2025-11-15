@@ -1,7 +1,7 @@
-import { defaults, type Options, withVercelToolbar } from "@nosecone/next";
+import { defaults, type Options, withVercelToolbar } from '@nosecone/next';
 
 // biome-ignore lint/performance/noBarrelFile: "re-exporting"
-export { createMiddleware as securityMiddleware } from "@nosecone/next";
+export { createMiddleware as securityMiddleware } from '@nosecone/next';
 
 // Nosecone security headers configuration
 // https://docs.arcjet.com/nosecone/quick-start

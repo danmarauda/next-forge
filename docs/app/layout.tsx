@@ -1,26 +1,26 @@
-import "./global.css";
-import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
-import { RootProvider } from "fumadocs-ui/provider";
+import './global.css';
+import { Analytics as VercelAnalytics } from '@vercel/analytics/react';
+import { RootProvider } from 'fumadocs-ui/provider';
 import {
   Geist_Mono as createMono,
   Geist as createSans,
-} from "next/font/google";
-import type { ReactNode } from "react";
-import { cn } from "@/lib/utils";
-import { Toaster } from "../components/ui/sonner";
-import { TooltipProvider } from "../components/ui/tooltip";
-import { ThemeProvider } from "./providers/theme";
+} from 'next/font/google';
+import type { ReactNode } from 'react';
+import { cn } from '@/lib/utils';
+import { Toaster } from '../components/ui/sonner';
+import { TooltipProvider } from '../components/ui/tooltip';
+import { ThemeProvider } from './providers/theme';
 
 const sans = createSans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  weight: "variable",
+  subsets: ['latin'],
+  variable: '--font-sans',
+  weight: 'variable',
 });
 
 const mono = createMono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  weight: "variable",
+  subsets: ['latin'],
+  variable: '--font-mono',
+  weight: 'variable',
 });
 
 type LayoutProps = {
@@ -30,9 +30,9 @@ type LayoutProps = {
 const Layout = ({ children }: LayoutProps) => (
   <html
     className={cn(
-      "touch-manipulation scroll-smooth font-sans antialiased",
+      'touch-manipulation scroll-smooth font-sans antialiased',
       sans.variable,
-      mono.variable
+      mono.variable,
     )}
     lang="en"
     suppressHydrationWarning

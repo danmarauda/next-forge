@@ -3,5 +3,5 @@ export const GET = () => {
   // For actual cron jobs, use Convex scheduled functions in convex/crons.ts
 
   // Simple health check - no database operation needed
-  return new Response("OK", { status: 200 });
+  return new Response('OK', { status: 200 });
 };

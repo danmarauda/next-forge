@@ -1,6 +1,4 @@
-import { ConvexError } from 'convex/values';
-import { zid } from 'convex-helpers/server/zod';
-import { z } from 'zod';
+import { ConvexError, v } from 'convex/values';
 
 import { aggregateUsers } from './aggregates';
 import {
@@ -17,11 +15,11 @@ export const checkUserAdminStatus = createAuthQuery({
   role: 'admin',
 })({
   args: {
-    userId: zid('user'),
+    userId: v.id('user'),
   },
-  returns: z.object({
-    isAdmin: z.boolean(),
-    role: z.string().nullish(),
+  returns: v.object({
+    isAdmin: v.boolean(),
+    role: v.optional(v.string()),
   }),
   handler: async (ctx, args) => {
     const user = await ctx.table('user').getX(args.userId);
@@ -38,10 +36,10 @@ export const updateUserRole = createAuthMutation({
   role: 'admin',
 })({
   args: {
-    role: z.enum(['user', 'admin']),
-    userId: zid('user'),
+    role: v.union(v.literal('user'), v.literal('admin')),
+    userId: v.id('user'),
   },
-  returns: z.boolean(),
+  returns: v.boolean(),
   handler: async (ctx, args) => {
     // Only admin can promote to admin
     if (args.role === 'admin' && !ctx.user.isAdmin) {
@@ -74,12 +72,12 @@ export const grantAdminByEmail = createAuthMutation({
   role: 'admin',
 })({
   args: {
-    email: z.string().email(),
-    role: z.enum(['admin']),
+    email: v.string(),
+    role: v.literal('admin'),
   },
-  returns: z.object({
-    success: z.boolean(),
-    userId: zid('user').optional(),
+  returns: v.object({
+    success: v.boolean(),
+    userId: v.optional(v.id('user')),
   }),
   handler: async (ctx, args) => {
     const user = await ctx.table('user').get('email', args.email);
@@ -104,8 +102,10 @@ export const grantAdminByEmail = createAuthMutation({
 // Get all users with pagination for admin dashboard
 export const getAllUsers = createAuthPaginatedQuery()({
   args: {
-    role: z.enum(['all', 'user', 'admin']).optional(),
-    search: z.string().optional(),
+    role: v.optional(
+      v.union(v.literal('all'), v.literal('user'), v.literal('admin')),
+    ),
+    search: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     // Build query
@@ -141,7 +141,7 @@ export const getAllUsers = createAuthPaginatedQuery()({
             isBanned: user?.banned,
             role: user?.role || 'user',
           };
-        })
+        }),
       );
 
       return {
@@ -170,7 +170,7 @@ export const getAllUsers = createAuthPaginatedQuery()({
         }
 
         return userData;
-      })
+      }),
     );
 
     return {
@@ -185,22 +185,22 @@ export const getDashboardStats = createAuthQuery({
   role: 'admin',
 })({
   args: {},
-  returns: z.object({
-    recentUsers: z.array(
-      z.object({
-        _id: zid('user'),
-        _creationTime: z.number(),
-        image: z.string().nullish(),
-        name: z.string().optional(),
-      })
+  returns: v.object({
+    recentUsers: v.array(
+      v.object({
+        _id: v.id('user'),
+        _creationTime: v.number(),
+        image: v.optional(v.string()),
+        name: v.optional(v.string()),
+      }),
     ),
-    totalAdmins: z.number(),
-    totalUsers: z.number(),
-    userGrowth: z.array(
-      z.object({
-        count: z.number(),
-        date: z.string(),
-      })
+    totalAdmins: v.number(),
+    totalUsers: v.number(),
+    userGrowth: v.array(
+      v.object({
+        count: v.number(),
+        date: v.string(),
+      }),
     ),
   }),
   handler: async (ctx) => {
@@ -235,7 +235,7 @@ export const getDashboardStats = createAuthQuery({
 
       const count = usersLast7Days.filter(
         (user) =>
-          user._creationTime >= startOfDay && user._creationTime <= endOfDay
+          user._creationTime >= startOfDay && user._creationTime <= endOfDay,
       ).length;
 
       userGrowth.push({
@@ -262,7 +262,7 @@ export const getDashboardStats = createAuthQuery({
 
     // Estimate total admins based on sample
     const estimatedAdmins = Math.round(
-      (adminCount / sampleUsers.length) * totalUsers
+      (adminCount / sampleUsers.length) * totalUsers,
     );
 
     return {

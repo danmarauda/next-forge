@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { CopyIcon } from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { CopyIcon } from 'lucide-react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
-const command = "npx next-forge@latest init";
+const command = 'npx next-forge@latest init';
 
 export const Installer = () => {
   const handleCopy = () => {
     navigator.clipboard.writeText(command);
-    toast.success("Copied to clipboard");
+    toast.success('Copied to clipboard');
   };
 
   return (

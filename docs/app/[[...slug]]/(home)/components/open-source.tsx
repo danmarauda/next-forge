@@ -1,5 +1,5 @@
-import { StarIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { StarIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export const OpenSource = () => (
   <div className="flex h-full flex-col items-start justify-between gap-4 p-8">
@@ -9,7 +9,7 @@ export const OpenSource = () => (
         <small>Open source</small>
       </div>
       <p className="font-semibold text-xl tracking-tight">
-        next-forge is 100% open source, provided by{" "}
+        next-forge is 100% open source, provided by{' '}
         <a
           className="text-primary underline"
           href="https://vercel.com"
@@ -17,9 +17,9 @@ export const OpenSource = () => (
           target="_blank"
         >
           Vercel
-        </a>{" "}
+        </a>{' '}
         and maintained by a community of developers. It was originally developed
-        by{" "}
+        by{' '}
         <a
           className="text-primary underline"
           href="https://x.com/haydenbleasel"

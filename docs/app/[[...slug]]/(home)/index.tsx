@@ -1,11 +1,11 @@
-import { Apps } from "./components/apps";
-import { CallToAction } from "./components/cta";
-import { Features } from "./components/features";
-import { Footer } from "./components/footer";
-import { Hero } from "./components/hero";
-import { OpenSource } from "./components/open-source";
-import { Review } from "./components/review";
-import { Social } from "./components/social";
+import { Apps } from './components/apps';
+import { CallToAction } from './components/cta';
+import { Features } from './components/features';
+import { Footer } from './components/footer';
+import { Hero } from './components/hero';
+import { OpenSource } from './components/open-source';
+import { Review } from './components/review';
+import { Social } from './components/social';
 
 const Home = () => (
   <main className="container mx-auto divide-y border-x px-0">

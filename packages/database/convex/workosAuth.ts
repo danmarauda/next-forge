@@ -20,7 +20,7 @@ export const getSessionsByToken = createPublicQuery()({
       token: z.string(),
       expiresAt: z.number(),
       activeOrganizationId: zid('organization').nullable(),
-    })
+    }),
   ),
   handler: async (ctx, args) => {
     // Use ctx.table() in query context
@@ -48,7 +48,7 @@ export const getSessionsByUserId = createPublicQuery()({
       token: z.string(),
       expiresAt: z.number(),
       activeOrganizationId: zid('organization').nullable(),
-    })
+    }),
   ),
   handler: async (ctx, args) => {
     // Use ctx.table() in query context
@@ -126,7 +126,7 @@ export const authenticateUser = createPublicAction()({
       (generatedApi.api as any).user.getUserByEmail,
       {
         email: workosUser.email,
-      }
+      },
     );
 
     let userId: Id<'user'>;
@@ -152,7 +152,7 @@ export const authenticateUser = createPublicAction()({
           lastName: workosUser.lastName || null,
           image: workosUser.profilePictureUrl || null,
           emailVerified: workosUser.emailVerified || existingUser.emailVerified,
-        }
+        },
       );
     } else {
       // Create new user via internal mutation
@@ -177,7 +177,7 @@ export const authenticateUser = createPublicAction()({
           image: workosUser.profilePictureUrl || null,
           emailVerified: workosUser.emailVerified || false,
           role,
-        }
+        },
       );
 
       userId = result.userId;
@@ -187,7 +187,7 @@ export const authenticateUser = createPublicAction()({
         (generatedApi2.api as any).user.getUserById,
         {
           userId,
-        }
+        },
       );
       personalOrgId = newUser?.personalOrganizationId || null;
     }
@@ -202,10 +202,10 @@ export const authenticateUser = createPublicAction()({
         .getSessionsByUserIdInternal,
       {
         userId,
-      }
+      },
     );
     const existingSession = existingSessions.find(
-      (s: any) => s.expiresAt > Date.now()
+      (s: any) => s.expiresAt > Date.now(),
     );
 
     if (existingSession) {
@@ -217,7 +217,7 @@ export const authenticateUser = createPublicAction()({
           sessionId: existingSession._id,
           token: accessToken,
           expiresAt,
-        }
+        },
       );
 
       const generatedApi3 = await import('./_generated/api');
@@ -225,7 +225,7 @@ export const authenticateUser = createPublicAction()({
         (generatedApi3.api as any).user.getUserById,
         {
           userId,
-        }
+        },
       );
 
       return {
@@ -249,7 +249,7 @@ export const authenticateUser = createPublicAction()({
         token: accessToken,
         expiresAt,
         activeOrganizationId: personalOrgId,
-      }
+      },
     );
 
     const generatedApi4 = await import('./_generated/api');
@@ -257,7 +257,7 @@ export const authenticateUser = createPublicAction()({
       (generatedApi4.api as any).user.getUserById,
       {
         userId,
-      }
+      },
     );
 
     return {
@@ -382,7 +382,7 @@ export const signOut = createPublicAction()({
         .getSessionsByTokenInternal,
       {
         token: args.token,
-      }
+      },
     );
 
     if (!sessions || sessions.length === 0) return { success: true };
@@ -395,7 +395,7 @@ export const signOut = createPublicAction()({
           .deleteSessionFromWorkOS,
         {
           sessionId: session._id,
-        }
+        },
       );
     }
 
@@ -429,7 +429,7 @@ export const handleWebhook = createPublicAction()({
           (generatedApiInternal5.api as any).user.getUserByEmail,
           {
             email: workosUser.email,
-          }
+          },
         );
 
         if (!existingUser) {
@@ -452,7 +452,7 @@ export const handleWebhook = createPublicAction()({
               image: workosUser.profilePictureUrl || null,
               emailVerified: workosUser.emailVerified || false,
               role,
-            }
+            },
           );
         }
 
@@ -465,7 +465,7 @@ export const handleWebhook = createPublicAction()({
           (generatedApiInternal5.api as any).user.getUserByEmail,
           {
             email: workosUser.email,
-          }
+          },
         );
 
         if (user) {
@@ -485,7 +485,7 @@ export const handleWebhook = createPublicAction()({
               image: workosUser.profilePictureUrl || null,
               emailVerified:
                 workosUser.emailVerified || (user?.emailVerified ?? false),
-            }
+            },
           );
         }
 
@@ -498,7 +498,7 @@ export const handleWebhook = createPublicAction()({
           (generatedApiInternal5.api as any).user.getUserByEmail,
           {
             email: workosUser.email,
-          }
+          },
         );
 
         if (user) {
@@ -507,7 +507,7 @@ export const handleWebhook = createPublicAction()({
               .softDeleteUserFromWorkOS,
             {
               userId: user._id,
-            }
+            },
           );
         }
 
@@ -517,37 +517,53 @@ export const handleWebhook = createPublicAction()({
       case 'organization.created':
       case 'organization.updated': {
         const workosOrg = args.data;
-        
+
         // Sync organization to Convex
         await ctx.runMutation(
-          (generatedApiInternal5.internal as any).workosInternal.syncOrganization,
+          (generatedApiInternal5.internal as any).workosInternal
+            .syncOrganization,
           {
             workosOrgId: workosOrg.id,
             name: workosOrg.name,
             domains: workosOrg.domains?.map((d: any) => d.domain) || [],
-            allowProfilesOutsideOrganization: workosOrg.allowProfilesOutsideOrganization,
-          }
+            allowProfilesOutsideOrganization:
+              workosOrg.allowProfilesOutsideOrganization,
+          },
         );
         break;
       }
 
       case 'organization.deleted': {
         const workosOrg = args.data;
-        
+
         // Delete organization from Convex
         await ctx.runMutation(
-          (generatedApiInternal5.internal as any).workosInternal.deleteOrganization,
+          (generatedApiInternal5.internal as any).workosInternal
+            .deleteOrganization,
           {
             workosOrgId: workosOrg.id,
-          }
+          },
         );
         break;
       }
 
-      default:
-        // Unknown event, log for debugging
-        console.log('Unknown WorkOS webhook event:', args.event);
+      default: {
+        // Unknown event, log for debugging with structured logging
+        const timestamp = new Date().toISOString();
+        console.log(`[${timestamp}] Unknown WorkOS webhook event:`, {
+          event: args.event,
+          data: args.data,
+          timestamp,
+        });
+      }
     }
+
+    const timestamp = new Date().toISOString();
+    console.log(`[${timestamp}] WorkOS Webhook Handler Completed:`, {
+      event: args.event,
+      success: true,
+      timestamp,
+    });
 
     return { success: true };
   },

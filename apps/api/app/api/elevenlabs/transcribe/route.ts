@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     console.error('ElevenLabs API error:', error);
     return NextResponse.json(
       { error: 'Failed to process audio' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

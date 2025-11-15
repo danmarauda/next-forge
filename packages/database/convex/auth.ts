@@ -1,5 +1,3 @@
-import type { DataModel } from './_generated/dataModel';
-import { ac, roles } from './authPermissions';
 import { convex } from '@convex-dev/better-auth/plugins';
 import { betterAuth } from 'better-auth';
 import { admin, organization } from 'better-auth/plugins';
@@ -10,11 +8,9 @@ import {
 } from 'better-auth-convex';
 import { entsTableFactory } from 'convex-ents';
 import { api, internal } from './_generated/api';
-import type {
-  ActionCtx,
-  MutationCtx,
-  QueryCtx,
-} from './_generated/server';
+import type { DataModel } from './_generated/dataModel';
+import type { ActionCtx, MutationCtx, QueryCtx } from './_generated/server';
+import { ac, roles } from './authPermissions';
 import { internalMutation } from './functions';
 import { getEnv } from './helpers/getEnv';
 import { createPersonalOrganization } from './organizationHelpers';
@@ -80,7 +76,10 @@ export const authClient = createClient<DataModel, typeof schema>({
   },
 });
 
-export const createAuth = (ctx: QueryCtx | MutationCtx | ActionCtx, { optionsOnly = false } = {}) => {
+export const createAuth = (
+  ctx: QueryCtx | MutationCtx | ActionCtx,
+  { optionsOnly = false } = {},
+) => {
   const baseURL = process.env.NEXT_PUBLIC_SITE_URL!;
 
   return betterAuth({
@@ -126,7 +125,7 @@ export const createAuth = (ctx: QueryCtx | MutationCtx | ActionCtx, { optionsOnl
               organizationName: data.organization.name,
               role: data.role,
               to: data.email,
-            }
+            },
           );
         },
       }),

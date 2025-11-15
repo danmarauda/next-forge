@@ -1,5 +1,3 @@
-import { getAuth } from './auth';
-import { registerTriggers } from './triggers';
 import { getHeaders } from 'better-auth-convex';
 import { type Auth, paginationOptsValidator } from 'convex/server';
 import { ConvexError } from 'convex/values';
@@ -24,6 +22,7 @@ import {
   internalQuery,
   query,
 } from './_generated/server';
+import { getAuth } from './auth';
 import {
   getSessionUser,
   getSessionUserWriter,
@@ -34,6 +33,7 @@ import { rateLimitGuard } from './helpers/rateLimiter';
 import { roleGuard } from './helpers/roleGuard';
 import { entDefinitions } from './schema';
 import type { Ent, EntWriter } from './shared/types';
+import { registerTriggers } from './triggers';
 
 // Initialize triggers
 const triggers = registerTriggers();
@@ -66,13 +66,13 @@ const mutation = customMutation(
   baseMutation,
   customCtx(async (ctx) => ({
     db: triggers.wrapDB(ctx).db,
-  }))
+  })),
 );
 export const internalMutation = customMutation(
   baseInternalMutation,
   customCtx(async (ctx) => ({
     db: triggers.wrapDB(ctx).db,
-  }))
+  })),
 );
 
 // Helper function to check if function is dev-only
@@ -86,7 +86,7 @@ function checkDevOnly(devOnly?: boolean) {
 }
 
 export const getCtxWithTable = <Ctx extends MutationCtx | QueryCtx>(
-  ctx: Ctx
+  ctx: Ctx,
 ) => {
   // Use the db from ctx (which may already be wrapped by triggers)
   // entsTableFactory will use ctx.db internally, preserving trigger wrapping
@@ -113,7 +113,7 @@ const MUTATION_AUTH_REQUIRED_ERROR: AuthError = {
 
 function requireUser<T>(
   user: T | null,
-  error: AuthError = AUTH_REQUIRED_ERROR
+  error: AuthError = AUTH_REQUIRED_ERROR,
 ): T {
   if (!user) {
     throw new ConvexError(error);
@@ -124,7 +124,7 @@ function requireUser<T>(
 
 async function withRequiredUserContext<Ctx extends MutationCtx | QueryCtx>(
   ctx: CtxWithTable<Ctx>,
-  user: CtxUser<Ctx>
+  user: CtxUser<Ctx>,
 ) {
   return {
     ...ctx,
@@ -140,7 +140,7 @@ async function withRequiredUserContext<Ctx extends MutationCtx | QueryCtx>(
 
 async function withOptionalUserContext<Ctx extends MutationCtx | QueryCtx>(
   ctx: CtxWithTable<Ctx>,
-  user: CtxUser<Ctx> | null
+  user: CtxUser<Ctx> | null,
 ) {
   return {
     ...ctx,
@@ -159,7 +159,7 @@ async function withOptionalUserContext<Ctx extends MutationCtx | QueryCtx>(
 async function applyRateLimit(
   ctx: ActionCtx | MutationCtx,
   rateLimit: string | null | undefined,
-  user: Pick<SessionUser, 'id' | 'plan'> | null
+  user: Pick<SessionUser, 'id' | 'plan'> | null,
 ) {
   if (!rateLimit) return;
 
@@ -191,7 +191,7 @@ export const createAuthQuery = ({
       }
 
       return withRequiredUserContext(ctx, user);
-    })
+    }),
   );
 
 export const createAuthPaginatedQuery = ({
@@ -238,7 +238,7 @@ export const createPublicQuery = ({
       const user = publicOnly ? null : await getSessionUser(ctx);
 
       return withOptionalUserContext(ctx, user);
-    })
+    }),
   );
 
 export const createPublicPaginatedQuery = ({
@@ -273,7 +273,7 @@ export const createInternalQuery = ({ devOnly }: { devOnly?: boolean } = {}) =>
       return {
         table: entsTableFactory(ctx, entDefinitions),
       };
-    })
+    }),
   );
 
 // Internal query that adds user and userId to context
@@ -297,7 +297,7 @@ export const createAuthInternalQuery = ({
       }
 
       return withRequiredUserContext(ctx, user);
-    })
+    }),
   );
 
 export const createAuthAction = ({
@@ -317,7 +317,7 @@ export const createAuthAction = ({
       // Use internal query to avoid circular dependency with api.user
       const rawUser: SessionUser | null = await ctx.runQuery(
         (internal as any).authHelpers.internalGetSessionUser,
-        {}
+        {},
       );
       const user = requireUser(rawUser);
 
@@ -332,7 +332,7 @@ export const createAuthAction = ({
         user,
         userId: user.id,
       };
-    })
+    }),
   );
 
 export const createPublicAction = ({ devOnly }: { devOnly?: boolean } = {}) =>
@@ -342,7 +342,7 @@ export const createPublicAction = ({ devOnly }: { devOnly?: boolean } = {}) =>
       checkDevOnly(devOnly);
 
       return {};
-    })
+    }),
   );
 
 export const createInternalAction = ({ devOnly }: { devOnly?: boolean } = {}) =>
@@ -352,7 +352,7 @@ export const createInternalAction = ({ devOnly }: { devOnly?: boolean } = {}) =>
       checkDevOnly(devOnly);
 
       return {};
-    })
+    }),
   );
 
 export const createInternalMutation = ({
@@ -368,7 +368,7 @@ export const createInternalMutation = ({
       return {
         table: entsTableFactory(ctx, entDefinitions),
       };
-    })
+    }),
   );
 
 // Protected mutation that adds user and userId to context
@@ -389,7 +389,7 @@ export const createAuthMutation = ({
       const ctx = getCtxWithTable(_ctx);
       const user = requireUser(
         await getSessionUserWriter(ctx),
-        MUTATION_AUTH_REQUIRED_ERROR
+        MUTATION_AUTH_REQUIRED_ERROR,
       );
 
       if (role) {
@@ -399,7 +399,7 @@ export const createAuthMutation = ({
       await applyRateLimit(ctx, rateLimit, user);
 
       return withRequiredUserContext(ctx, user);
-    })
+    }),
   );
 
 // Public mutation that adds user and userId to context if authenticated
@@ -421,5 +421,5 @@ export const createPublicMutation = ({
       await applyRateLimit(ctx, rateLimit, user);
 
       return withOptionalUserContext(ctx, user);
-    })
+    }),
   );

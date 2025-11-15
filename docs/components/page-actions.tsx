@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { cva } from "class-variance-authority";
+import { cva } from 'class-variance-authority';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "fumadocs-ui/components/ui/popover";
-import { useCopyButton } from "fumadocs-ui/utils/use-copy-button";
+} from 'fumadocs-ui/components/ui/popover';
+import { useCopyButton } from 'fumadocs-ui/utils/use-copy-button';
 import {
   Check,
   ChevronDown,
   Copy,
   ExternalLinkIcon,
   MessageCircleIcon,
-} from "lucide-react";
-import { useMemo, useState } from "react";
-import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
+} from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { cn } from '@/lib/utils';
+import { Button } from './ui/button';
 
 const cache = new Map<string, string>();
 
@@ -40,7 +40,7 @@ export function LLMCopyButton({
     try {
       await navigator.clipboard.write([
         new ClipboardItem({
-          "text/plain": fetch(markdownUrl).then(async (res) => {
+          'text/plain': fetch(markdownUrl).then(async (res) => {
             const content = await res.text();
             cache.set(markdownUrl, content);
 
@@ -67,7 +67,7 @@ export function LLMCopyButton({
 }
 
 const optionVariants = cva(
-  "inline-flex items-center gap-2 rounded-lg p-2 text-sm hover:bg-fd-accent hover:text-fd-accent-foreground [&_svg]:size-4"
+  'inline-flex items-center gap-2 rounded-lg p-2 text-sm hover:bg-fd-accent hover:text-fd-accent-foreground [&_svg]:size-4',
 );
 
 export function ViewOptions({
@@ -86,14 +86,14 @@ export function ViewOptions({
 }) {
   const items = useMemo(() => {
     const fullMarkdownUrl =
-      typeof window !== "undefined"
+      typeof window !== 'undefined'
         ? new URL(markdownUrl, window.location.origin)
-        : "loading";
+        : 'loading';
     const q = `Read ${fullMarkdownUrl}, I want to ask questions about it.`;
 
     return [
       {
-        title: "Open in GitHub",
+        title: 'Open in GitHub',
         href: githubUrl,
         icon: (
           <svg fill="currentColor" role="img" viewBox="0 0 24 24">
@@ -103,7 +103,7 @@ export function ViewOptions({
         ),
       },
       {
-        title: "Open in Scira AI",
+        title: 'Open in Scira AI',
         href: `https://scira.ai/?${new URLSearchParams({
           q,
         })}`,
@@ -167,9 +167,9 @@ export function ViewOptions({
         ),
       },
       {
-        title: "Open in ChatGPT",
+        title: 'Open in ChatGPT',
         href: `https://chatgpt.com/?${new URLSearchParams({
-          hints: "search",
+          hints: 'search',
           q,
         })}`,
         icon: (
@@ -185,7 +185,7 @@ export function ViewOptions({
         ),
       },
       {
-        title: "Open in Claude",
+        title: 'Open in Claude',
         href: `https://claude.ai/new?${new URLSearchParams({
           q,
         })}`,
@@ -202,7 +202,7 @@ export function ViewOptions({
         ),
       },
       {
-        title: "Open in T3 Chat",
+        title: 'Open in T3 Chat',
         href: `https://t3.chat/new?${new URLSearchParams({
           q,
         })}`,

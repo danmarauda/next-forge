@@ -28,7 +28,7 @@ export const VoiceInput = React.forwardRef<HTMLInputElement, VoiceInputProps>(
       onChange,
       ...props
     },
-    ref
+    ref,
   ) => {
     const handleVoiceTranscript = (text: string) => {
       if (onVoiceTranscript) {
@@ -75,7 +75,7 @@ export const VoiceInput = React.forwardRef<HTMLInputElement, VoiceInputProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 VoiceInput.displayName = 'VoiceInput';

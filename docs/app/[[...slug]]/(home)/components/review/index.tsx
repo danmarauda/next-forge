@@ -1,7 +1,7 @@
-import { MessageCircleIcon } from "lucide-react";
-import Image from "next/image";
-import rauchg from "./rauchg.jpg";
-import vercel from "./vercel.jpg";
+import { MessageCircleIcon } from 'lucide-react';
+import Image from 'next/image';
+import rauchg from './rauchg.jpg';
+import vercel from './vercel.jpg';
 
 export const Review = () => (
   <section className="flex flex-col gap-8 p-8">

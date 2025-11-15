@@ -25,7 +25,7 @@ export const isWorkOSAuth = async () => {
     const user = await fetchQuery(
       api.workosAuth.getCurrentUserFromToken,
       { token },
-      { token }
+      { token },
     );
     return !!user;
   } catch {
@@ -43,7 +43,7 @@ export const getWorkOSSessionUser = async () => {
   return await fetchQuery(
     api.workosAuth.getCurrentUserFromToken,
     { token },
-    { token }
+    { token },
   );
 };
 

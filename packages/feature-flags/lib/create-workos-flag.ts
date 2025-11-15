@@ -1,6 +1,6 @@
-import { analytics } from "@repo/analytics/server";
-import { auth } from "@repo/auth/server";
-import { flag } from "flags/next";
+import { analytics } from '@repo/analytics/server';
+import { auth } from '@repo/auth/server';
+import { flag } from 'flags/next';
 
 /**
  * Creates a WorkOS-specific feature flag that checks:
@@ -11,17 +11,17 @@ import { flag } from "flags/next";
  */
 export const createWorkOSFlag = (
   key: string,
-  defaultValue: boolean = false
+  defaultValue: boolean = false,
 ) => {
   return flag({
     key,
     defaultValue,
     async decide() {
       // Check environment variable override first
-      const envKey = `NEXT_PUBLIC_${key.replace(/\./g, "_").toUpperCase()}`;
+      const envKey = `NEXT_PUBLIC_${key.replace(/\./g, '_').toUpperCase()}`;
       const envValue = process.env[envKey];
       if (envValue !== undefined) {
-        return envValue === "true" || envValue === "1";
+        return envValue === 'true' || envValue === '1';
       }
 
       const { userId } = await auth();
@@ -37,4 +37,3 @@ export const createWorkOSFlag = (
     },
   });
 };
-

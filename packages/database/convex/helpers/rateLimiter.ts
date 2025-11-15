@@ -137,7 +137,7 @@ export const rateLimiter = new RateLimiter(components.rateLimiter, {
 // Helper function to get rate limit key based on user tier
 export function getRateLimitKey(
   baseKey: string,
-  tier: 'free' | 'premium' | 'public'
+  tier: 'free' | 'premium' | 'public',
 ): string {
   // For general limits without tiers and admin-only limits
   if (['free', 'premium', 'public', 'scraper', 'vercel'].includes(baseKey)) {
@@ -150,7 +150,7 @@ export function getRateLimitKey(
 
 // Helper to get user tier based on session user
 export function getUserTier(
-  user: { isAdmin?: boolean; plan?: SessionUser['plan'] } | null
+  user: { isAdmin?: boolean; plan?: SessionUser['plan'] } | null,
 ): 'free' | 'premium' | 'public' {
   if (!user) {
     return 'public';
@@ -170,7 +170,7 @@ export async function rateLimitGuard(
   ctx: (ActionCtx | MutationCtx) & {
     rateLimitKey: string;
     user: Pick<SessionUser, 'id' | 'plan'> | null;
-  }
+  },
 ) {
   const tier = getUserTier(ctx.user);
   const limitKey = getRateLimitKey(ctx.rateLimitKey, tier) as any;

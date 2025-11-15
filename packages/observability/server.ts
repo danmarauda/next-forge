@@ -4,8 +4,8 @@
  * https://docs.sentry.io/platforms/javascript/guides/nextjs/
  */
 
-import * as Sentry from "@sentry/nextjs";
-import { keys } from "./keys";
+import * as Sentry from '@sentry/nextjs';
+import { keys } from './keys';
 
 export const initializeSentry = (): ReturnType<typeof Sentry.init> =>
   Sentry.init({
@@ -23,6 +23,6 @@ export const initializeSentry = (): ReturnType<typeof Sentry.init> =>
     // Integrations for console logging
     integrations: [
       // Send console.log, console.error, and console.warn calls as logs to Sentry
-      Sentry.consoleLoggingIntegration({ levels: ["log", "error", "warn"] }),
+      Sentry.consoleLoggingIntegration({ levels: ['log', 'error', 'warn'] }),
     ],
   });

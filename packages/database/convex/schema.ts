@@ -52,6 +52,20 @@ const schema = defineEntSchema(
       createdAt: v.number(),
       metadata: v.optional(v.union(v.null(), v.string())),
       monthlyCredits: v.number(),
+      // Branding fields
+      primaryColor: v.optional(v.string()),
+      secondaryColor: v.optional(v.string()),
+      logoUrl: v.optional(v.string()),
+      faviconUrl: v.optional(v.string()),
+      // Routing fields
+      subdomain: v.optional(v.string()),
+      customDomain: v.optional(v.string()),
+      // Configuration fields
+      settings: v.optional(v.string()), // JSON string
+      status: v.optional(v.string()), // "active" | "suspended" | "trial"
+      plan: v.optional(v.string()), // "enterprise" | "professional" | "basic"
+      maxUsers: v.optional(v.number()),
+      features: v.optional(v.string()), // JSON array of enabled features
     })
       .field('slug', v.string(), { unique: true })
       .field('name', v.string(), { index: true })
@@ -206,9 +220,9 @@ const schema = defineEntSchema(
       .field(
         'priority',
         v.optional(
-          v.union(v.literal('low'), v.literal('medium'), v.literal('high'))
+          v.union(v.literal('low'), v.literal('medium'), v.literal('high')),
         ),
-        { index: true }
+        { index: true },
       )
       .field('dueDate', v.optional(v.number()), { index: true })
       .deletion('soft')
@@ -308,7 +322,7 @@ const schema = defineEntSchema(
   },
   {
     schemaValidation: true,
-  }
+  },
 );
 
 export default schema;

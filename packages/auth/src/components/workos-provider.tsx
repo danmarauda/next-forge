@@ -1,7 +1,11 @@
 'use client';
 
 import type { api } from '@convex/_generated/api';
-import { ConvexProviderWithAuth, ConvexReactClient, type Preloaded } from 'convex/react';
+import {
+  ConvexProviderWithAuth,
+  ConvexReactClient,
+  type Preloaded,
+} from 'convex/react';
 import { createAtomStore } from 'jotai-x';
 import { type ReactNode, useCallback, useEffect } from 'react';
 
@@ -22,7 +26,7 @@ export const { AuthProvider, useAuthStore, useAuthValue } = createAtomStore(
   {
     effect: AuthEffect,
     name: 'auth',
-  }
+  },
 );
 
 // Custom useAuth hook for ConvexProviderWithAuth
@@ -36,7 +40,7 @@ function useAuth() {
       const currentToken = workosAuth.getToken();
       return currentToken || null;
     },
-    []
+    [],
   );
 
   return {

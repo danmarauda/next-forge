@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { useOthers, useSelf } from "@repo/collaboration/hooks";
+import { useOthers, useSelf } from '@repo/collaboration/hooks';
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@repo/design-system/components/ui/avatar";
+} from '@repo/design-system/components/ui/avatar';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@repo/design-system/components/ui/tooltip";
+} from '@repo/design-system/components/ui/tooltip';
 
 type PresenceAvatarProps = {
-  info?: Liveblocks["UserMeta"]["info"];
+  info?: Liveblocks['UserMeta']['info'];
 };
 
 const PresenceAvatar = ({ info }: PresenceAvatarProps) => (
@@ -27,7 +27,7 @@ const PresenceAvatar = ({ info }: PresenceAvatarProps) => (
       </Avatar>
     </TooltipTrigger>
     <TooltipContent collisionPadding={4}>
-      <p>{info?.name ?? "Unknown"}</p>
+      <p>{info?.name ?? 'Unknown'}</p>
     </TooltipContent>
   </Tooltip>
 );
@@ -47,7 +47,7 @@ export const AvatarStack = () => {
         <PresenceAvatar
           info={{
             name: `+${others.length - 3}`,
-            color: "var(--color-muted-foreground)",
+            color: 'var(--color-muted-foreground)',
           }}
         />
       )}

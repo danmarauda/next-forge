@@ -1,20 +1,21 @@
-"use client";
+'use client';
 
-import { OrganizationSwitcher, UserButton } from "@repo/auth/client";
-import { ModeToggle } from "@repo/design-system/components/mode-toggle";
-import { Button } from "@repo/design-system/components/ui/button";
+import { UserButton } from '@repo/auth/client';
+import { ModeToggle } from '@repo/design-system/components/mode-toggle';
+import { OrganizationSwitcher } from '@repo/design-system/components/org-switcher';
+import { Button } from '@repo/design-system/components/ui/button';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@repo/design-system/components/ui/collapsible";
+} from '@repo/design-system/components/ui/collapsible';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@repo/design-system/components/ui/dropdown-menu";
+} from '@repo/design-system/components/ui/dropdown-menu';
 import {
   Sidebar,
   SidebarContent,
@@ -32,9 +33,9 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   useSidebar,
-} from "@repo/design-system/components/ui/sidebar";
-import { cn } from "@repo/design-system/lib/utils";
-import { NotificationsTrigger } from "@repo/notifications/components/trigger";
+} from '@repo/design-system/components/ui/sidebar';
+import { cn } from '@repo/design-system/lib/utils';
+import { NotificationsTrigger } from '@repo/notifications/components/trigger';
 import {
   AnchorIcon,
   BookOpenIcon,
@@ -51,10 +52,10 @@ import {
   ShareIcon,
   SquareTerminalIcon,
   Trash2Icon,
-} from "lucide-react";
-import Link from "next/link";
-import type { ReactNode } from "react";
-import { Search } from "./search";
+} from 'lucide-react';
+import Link from 'next/link';
+import type { ReactNode } from 'react';
+import { Search } from './search';
 
 type GlobalSidebarProperties = {
   readonly children: ReactNode;
@@ -62,128 +63,128 @@ type GlobalSidebarProperties = {
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: 'shadcn',
+    email: 'm@example.com',
+    avatar: '/avatars/shadcn.jpg',
   },
   navMain: [
     {
-      title: "Playground",
-      url: "#",
+      title: 'Playground',
+      url: '#',
       icon: SquareTerminalIcon,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: 'History',
+          url: '#',
         },
         {
-          title: "Starred",
-          url: "#",
+          title: 'Starred',
+          url: '#',
         },
         {
-          title: "Settings",
-          url: "#",
+          title: 'Settings',
+          url: '#',
         },
       ],
     },
     {
-      title: "Models",
-      url: "#",
+      title: 'Models',
+      url: '#',
       icon: BotIcon,
       items: [
         {
-          title: "Genesis",
-          url: "#",
+          title: 'Genesis',
+          url: '#',
         },
         {
-          title: "Explorer",
-          url: "#",
+          title: 'Explorer',
+          url: '#',
         },
         {
-          title: "Quantum",
-          url: "#",
+          title: 'Quantum',
+          url: '#',
         },
       ],
     },
     {
-      title: "Documentation",
-      url: "#",
+      title: 'Documentation',
+      url: '#',
       icon: BookOpenIcon,
       items: [
         {
-          title: "Introduction",
-          url: "#",
+          title: 'Introduction',
+          url: '#',
         },
         {
-          title: "Get Started",
-          url: "#",
+          title: 'Get Started',
+          url: '#',
         },
         {
-          title: "Tutorials",
-          url: "#",
+          title: 'Tutorials',
+          url: '#',
         },
         {
-          title: "Changelog",
-          url: "#",
+          title: 'Changelog',
+          url: '#',
         },
       ],
     },
     {
-      title: "Settings",
-      url: "#",
+      title: 'Settings',
+      url: '#',
       icon: Settings2Icon,
       items: [
         {
-          title: "General",
-          url: "#",
+          title: 'General',
+          url: '#',
         },
         {
-          title: "Team",
-          url: "#",
+          title: 'Team',
+          url: '#',
         },
         {
-          title: "Billing",
-          url: "#",
+          title: 'Billing',
+          url: '#',
         },
         {
-          title: "Limits",
-          url: "#",
+          title: 'Limits',
+          url: '#',
         },
       ],
     },
   ],
   navSecondary: [
     {
-      title: "Webhooks",
-      url: "/webhooks",
+      title: 'Webhooks',
+      url: '/webhooks',
       icon: AnchorIcon,
     },
     {
-      title: "Support",
-      url: "#",
+      title: 'Support',
+      url: '#',
       icon: LifeBuoyIcon,
     },
     {
-      title: "Feedback",
-      url: "#",
+      title: 'Feedback',
+      url: '#',
       icon: SendIcon,
     },
   ],
   projects: [
     {
-      name: "Design Engineering",
-      url: "#",
+      name: 'Design Engineering',
+      url: '#',
       icon: FrameIcon,
     },
     {
-      name: "Sales & Marketing",
-      url: "#",
+      name: 'Sales & Marketing',
+      url: '#',
       icon: PieChartIcon,
     },
     {
-      name: "Travel",
-      url: "#",
+      name: 'Travel',
+      url: '#',
       icon: MapIcon,
     },
   ],
@@ -200,14 +201,11 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
             <SidebarMenuItem>
               <div
                 className={cn(
-                  "h-[36px] overflow-hidden transition-all [&>div]:w-full",
-                  sidebar.open ? "" : "-mx-1"
+                  'overflow-hidden transition-all',
+                  sidebar.open ? 'w-full' : '-mx-1',
                 )}
               >
-                <OrganizationSwitcher
-                  afterSelectOrganizationUrl="/"
-                  hidePersonal
-                />
+                <OrganizationSwitcher />
               </div>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -329,9 +327,9 @@ export const GlobalSidebar = ({ children }: GlobalSidebarProperties) => {
               <UserButton
                 appearance={{
                   elements: {
-                    rootBox: "flex overflow-hidden w-full",
-                    userButtonBox: "flex-row-reverse",
-                    userButtonOuterIdentifier: "truncate pl-0",
+                    rootBox: 'flex overflow-hidden w-full',
+                    userButtonBox: 'flex-row-reverse',
+                    userButtonOuterIdentifier: 'truncate pl-0',
                   },
                 }}
                 showName

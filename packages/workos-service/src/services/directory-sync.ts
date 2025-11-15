@@ -1,23 +1,23 @@
-import type { WorkOS } from "@workos-inc/node";
-import type { BaseWorkOSService, WorkOSServiceConfig } from "../types";
+import type { WorkOS } from '@workos-inc/node';
+import type { BaseWorkOSService, WorkOSServiceConfig } from '../types';
 
 /**
  * Directory Sync Service
- * 
+ *
  * Handles WorkOS Directory Sync operations (SCIM).
  * Feature flag: workos.directorySync.enabled
  */
 export class DirectorySyncService implements BaseWorkOSService {
   constructor(
     private client: WorkOS,
-    private config: WorkOSServiceConfig
+    private config: WorkOSServiceConfig,
   ) {}
 
   isEnabled(): boolean {
     // Check environment variable override
     const envEnabled = process.env.NEXT_PUBLIC_WORKOS_DIRECTORY_SYNC_ENABLED;
     if (envEnabled !== undefined) {
-      return envEnabled === "true" || envEnabled === "1";
+      return envEnabled === 'true' || envEnabled === '1';
     }
     return this.config.enabled;
   }
@@ -29,12 +29,9 @@ export class DirectorySyncService implements BaseWorkOSService {
   /**
    * List directories
    */
-  async listDirectories(options?: {
-    organizationId?: string;
-    limit?: number;
-  }) {
+  async listDirectories(options?: { organizationId?: string; limit?: number }) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS Directory Sync is not enabled");
+      throw new Error('WorkOS Directory Sync is not enabled');
     }
 
     return this.client.directorySync.listDirectories(options);
@@ -45,7 +42,7 @@ export class DirectorySyncService implements BaseWorkOSService {
    */
   async getDirectory(directoryId: string) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS Directory Sync is not enabled");
+      throw new Error('WorkOS Directory Sync is not enabled');
     }
 
     return this.client.directorySync.getDirectory(directoryId);
@@ -54,11 +51,14 @@ export class DirectorySyncService implements BaseWorkOSService {
   /**
    * List directory groups
    */
-  async listGroups(directoryId: string, options?: {
-    limit?: number;
-  }) {
+  async listGroups(
+    directoryId: string,
+    options?: {
+      limit?: number;
+    },
+  ) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS Directory Sync is not enabled");
+      throw new Error('WorkOS Directory Sync is not enabled');
     }
 
     return this.client.directorySync.listGroups(directoryId, options);
@@ -69,7 +69,7 @@ export class DirectorySyncService implements BaseWorkOSService {
    */
   async getGroup(directoryId: string, groupId: string) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS Directory Sync is not enabled");
+      throw new Error('WorkOS Directory Sync is not enabled');
     }
 
     return this.client.directorySync.getGroup(directoryId, groupId);
@@ -78,11 +78,14 @@ export class DirectorySyncService implements BaseWorkOSService {
   /**
    * List directory users
    */
-  async listUsers(directoryId: string, options?: {
-    limit?: number;
-  }) {
+  async listUsers(
+    directoryId: string,
+    options?: {
+      limit?: number;
+    },
+  ) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS Directory Sync is not enabled");
+      throw new Error('WorkOS Directory Sync is not enabled');
     }
 
     return this.client.directorySync.listUsers(directoryId, options);
@@ -93,10 +96,9 @@ export class DirectorySyncService implements BaseWorkOSService {
    */
   async getUser(directoryId: string, userId: string) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS Directory Sync is not enabled");
+      throw new Error('WorkOS Directory Sync is not enabled');
     }
 
     return this.client.directorySync.getUser(directoryId, userId);
   }
 }
-

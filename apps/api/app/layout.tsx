@@ -1,5 +1,5 @@
-import { AnalyticsProvider } from "@repo/analytics/provider";
-import type { ReactNode } from "react";
+import { AnalyticsProvider } from '@repo/analytics/provider';
+import type { ReactNode } from 'react';
 
 type RootLayoutProperties = {
   readonly children: ReactNode;

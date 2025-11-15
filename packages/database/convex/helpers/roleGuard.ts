@@ -3,7 +3,7 @@ import { ConvexError } from 'convex/values';
 // Helper function to check role authorization
 export function roleGuard(
   role: 'admin',
-  user: { isAdmin?: boolean; role?: string | null } | null
+  user: { isAdmin?: boolean; role?: string | null } | null,
 ) {
   if (!user) {
     throw new ConvexError({

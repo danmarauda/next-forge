@@ -1,4 +1,4 @@
-import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
+import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 
 const Vercel = () => (
   <svg
@@ -32,15 +32,15 @@ const Slash = () => (
 );
 
 export const baseOptions: BaseLayoutProps = {
-  githubUrl: "https://github.com/vercel/next-forge",
+  githubUrl: 'https://github.com/vercel/next-forge',
   links: [
     {
-      text: "Home",
-      url: "/",
+      text: 'Home',
+      url: '/',
     },
     {
-      text: "Docs",
-      url: "/docs",
+      text: 'Docs',
+      url: '/docs',
     },
   ],
   nav: {

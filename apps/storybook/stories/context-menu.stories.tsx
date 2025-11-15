@@ -12,17 +12,17 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuTrigger,
-} from "@repo/design-system/components/ui/context-menu";
-import type { Meta, StoryObj } from "@storybook/react";
+} from '@repo/design-system/components/ui/context-menu';
+import type { Meta, StoryObj } from '@storybook/react';
 
 /**
  * Displays a menu to the user — such as a set of actions or functions —
  * triggered by a button.
  */
 const meta = {
-  title: "ui/ContextMenu",
+  title: 'ui/ContextMenu',
   component: ContextMenu,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {},
   args: {},
   render: (args) => (
@@ -39,7 +39,7 @@ const meta = {
     </ContextMenu>
   ),
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
 } satisfies Meta<typeof ContextMenu>;
 

@@ -1,17 +1,14 @@
-"use client";
+'use client';
 
-import { useMemo } from "react";
-import { createWorkOSService } from "./src/workos-service";
-import { workosServiceConfig } from "./config";
+import { useMemo } from 'react';
+import { workosServiceConfig } from './config';
+import { createWorkOSService } from './src/workos-service';
 
 /**
  * Hook to get WorkOS service instance
  */
 export function useWorkOSService() {
-  return useMemo(
-    () => createWorkOSService(workosServiceConfig),
-    []
-  );
+  return useMemo(() => createWorkOSService(workosServiceConfig), []);
 }
 
 /**
@@ -45,4 +42,3 @@ export function useWorkOSDirectorySync() {
   const service = useWorkOSService();
   return service.directorySync;
 }
-

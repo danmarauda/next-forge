@@ -2,23 +2,23 @@
 
 /**
  * WorkOS Features Implementation Script
- * 
+ *
  * Implements and tests all WorkOS features programmatically where possible.
  * Features that require manual dashboard configuration are documented.
  */
 
-import { WorkOS } from "@workos-inc/node";
-import { readFileSync } from "fs";
-import { join } from "path";
-import { config } from "dotenv";
+import { WorkOS } from '@workos-inc/node';
+import { config } from 'dotenv';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 // Load environment variables
-config({ path: join(process.cwd(), "apps/app/.env.local") });
-config({ path: join(process.cwd(), "packages/database/.env.local") });
+config({ path: join(process.cwd(), 'apps/app/.env.local') });
+config({ path: join(process.cwd(), 'packages/database/.env.local') });
 
 interface ImplementationResult {
   feature: string;
-  status: "completed" | "partial" | "manual" | "failed";
+  status: 'completed' | 'partial' | 'manual' | 'failed';
   message: string;
   details?: any;
   dashboardUrl?: string;
@@ -27,12 +27,12 @@ interface ImplementationResult {
 const results: ImplementationResult[] = [];
 
 async function main() {
-  console.log("🚀 Implementing All WorkOS Features\n");
-  console.log("=".repeat(80));
+  console.log('🚀 Implementing All WorkOS Features\n');
+  console.log('='.repeat(80));
 
   const apiKey = process.env.WORKOS_API_KEY;
   if (!apiKey) {
-    console.error("❌ WORKOS_API_KEY is not set");
+    console.error('❌ WORKOS_API_KEY is not set');
     process.exit(1);
   }
 
@@ -40,55 +40,64 @@ async function main() {
 
   try {
     // Feature 1: Verify Core Setup
-    console.log("\n📋 Feature 1: Core Setup Verification");
+    console.log('\n📋 Feature 1: Core Setup Verification');
     await verifyCoreSetup(workos);
 
     // Feature 2: Roles & Permissions (via API where possible)
-    console.log("\n🎭 Feature 2: Roles & Permissions");
+    console.log('\n🎭 Feature 2: Roles & Permissions');
     await implementRolesAndPermissions(workos);
 
     // Feature 3: Test Organizations & Users
-    console.log("\n👥 Feature 3: Organizations & Users");
+    console.log('\n👥 Feature 3: Organizations & Users');
     await testOrganizationsAndUsers(workos);
 
     // Feature 4: Test SSO Configuration
-    console.log("\n🌐 Feature 4: SSO Configuration");
+    console.log('\n🌐 Feature 4: SSO Configuration');
     await testSSOConfiguration(workos);
 
     // Feature 5: Test Directory Sync
-    console.log("\n📁 Feature 5: Directory Sync");
+    console.log('\n📁 Feature 5: Directory Sync');
     await testDirectorySync(workos);
 
     // Feature 6: Test Audit Logs
-    console.log("\n📝 Feature 6: Audit Logs");
+    console.log('\n📝 Feature 6: Audit Logs');
     await testAuditLogs(workos);
 
     // Feature 7: Test Admin Portal
-    console.log("\n👑 Feature 7: Admin Portal");
+    console.log('\n👑 Feature 7: Admin Portal');
     await testAdminPortal(workos);
 
     // Feature 8: Test Webhooks
-    console.log("\n🔔 Feature 8: Webhooks");
+    console.log('\n🔔 Feature 8: Webhooks');
     await testWebhooks();
 
     // Print Summary
     printSummary();
-
   } catch (error) {
-    console.error("\n❌ Implementation failed:", error instanceof Error ? error.message : error);
+    console.error(
+      '\n❌ Implementation failed:',
+      error instanceof Error ? error.message : error,
+    );
     process.exit(1);
   }
 }
 
 function recordResult(
   feature: string,
-  status: "completed" | "partial" | "manual" | "failed",
+  status: 'completed' | 'partial' | 'manual' | 'failed',
   message: string,
   details?: any,
-  dashboardUrl?: string
+  dashboardUrl?: string,
 ) {
   results.push({ feature, status, message, details, dashboardUrl });
-  const icon = status === "completed" ? "✅" : status === "partial" ? "⚠️" : status === "manual" ? "📝" : "❌";
+  const icon =
+    status === 'completed'
+      ? '✅'
+      : status === 'partial'
+        ? '⚠️'
+        : status === 'manual'
+          ? '📝'
+          : '❌';
   console.log(`  ${icon} ${message}`);
 }
 
@@ -96,76 +105,78 @@ async function verifyCoreSetup(workos: WorkOS) {
   try {
     // Verify API connection
     await workos.organizations.listOrganizations({ limit: 1 });
-    recordResult("Core Setup", "completed", "API connection verified");
+    recordResult('Core Setup', 'completed', 'API connection verified');
 
     // Verify application configuration
     const redirectUri = process.env.WORKOS_REDIRECT_URI;
     if (redirectUri) {
-      recordResult("Redirect URI", "completed", `Redirect URI configured: ${redirectUri}`);
+      recordResult(
+        'Redirect URI',
+        'completed',
+        `Redirect URI configured: ${redirectUri}`,
+      );
     } else {
-      recordResult("Redirect URI", "failed", "Redirect URI not configured");
+      recordResult('Redirect URI', 'failed', 'Redirect URI not configured');
     }
 
     const webhookUrl = process.env.WORKOS_WEBHOOK_URL;
     if (webhookUrl) {
-      recordResult("Webhook", "completed", `Webhook configured: ${webhookUrl}`);
+      recordResult('Webhook', 'completed', `Webhook configured: ${webhookUrl}`);
     } else {
-      recordResult("Webhook", "partial", "Webhook URL not set in environment");
+      recordResult('Webhook', 'partial', 'Webhook URL not set in environment');
     }
   } catch (error) {
-    recordResult("Core Setup", "failed", `Failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+    recordResult(
+      'Core Setup',
+      'failed',
+      `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }
 
 async function implementRolesAndPermissions(workos: WorkOS) {
   // Note: WorkOS Roles & Permissions are typically configured via dashboard
   // This function documents the recommended structure
-  
+
   const recommendedRoles = [
     {
-      name: "Admin",
+      name: 'Admin',
       permissions: [
-        "users.read",
-        "users.write",
-        "users.delete",
-        "organizations.read",
-        "organizations.write",
-        "organizations.delete",
-        "settings.read",
-        "settings.write",
+        'users.read',
+        'users.write',
+        'users.delete',
+        'organizations.read',
+        'organizations.write',
+        'organizations.delete',
+        'settings.read',
+        'settings.write',
       ],
     },
     {
-      name: "Manager",
+      name: 'Manager',
       permissions: [
-        "users.read",
-        "users.write",
-        "organizations.read",
-        "reports.read",
+        'users.read',
+        'users.write',
+        'organizations.read',
+        'reports.read',
       ],
     },
     {
-      name: "Member",
-      permissions: [
-        "users.read",
-        "organizations.read",
-      ],
+      name: 'Member',
+      permissions: ['users.read', 'organizations.read'],
     },
     {
-      name: "Viewer",
-      permissions: [
-        "users.read",
-        "organizations.read",
-      ],
+      name: 'Viewer',
+      permissions: ['users.read', 'organizations.read'],
     },
   ];
 
   recordResult(
-    "Roles & Permissions",
-    "manual",
-    "Configure in dashboard - see WORKOS_STEP_BY_STEP_SETUP.md",
+    'Roles & Permissions',
+    'manual',
+    'Configure in dashboard - see WORKOS_STEP_BY_STEP_SETUP.md',
     { recommendedRoles },
-    "https://dashboard.workos.com/environment_01K5K3Y79TXRCBAA52TCYZ5CCA/roles-and-permissions"
+    'https://dashboard.workos.com/environment_01K5K3Y79TXRCBAA52TCYZ5CCA/roles-and-permissions',
   );
 }
 
@@ -174,22 +185,26 @@ async function testOrganizationsAndUsers(workos: WorkOS) {
     // List organizations
     const orgs = await workos.organizations.listOrganizations({ limit: 10 });
     recordResult(
-      "Organizations",
-      "completed",
+      'Organizations',
+      'completed',
       `Found ${orgs.data.length} organization(s)`,
-      { count: orgs.data.length, organizations: orgs.data.map((o) => ({ id: o.id, name: o.name })) }
+      {
+        count: orgs.data.length,
+        organizations: orgs.data.map((o) => ({ id: o.id, name: o.name })),
+      },
     );
 
     // List users
     const users = await workos.userManagement.listUsers({ limit: 10 });
-    recordResult(
-      "Users",
-      "completed",
-      `Found ${users.data.length} user(s)`,
-      { count: users.data.length }
-    );
+    recordResult('Users', 'completed', `Found ${users.data.length} user(s)`, {
+      count: users.data.length,
+    });
   } catch (error) {
-    recordResult("Organizations & Users", "failed", `Failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+    recordResult(
+      'Organizations & Users',
+      'failed',
+      `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }
 
@@ -199,41 +214,55 @@ async function testSSOConfiguration(workos: WorkOS) {
     if (orgs.data.length > 0) {
       const org = orgs.data[0];
       recordResult(
-        "SSO",
-        "manual",
-        "SSO ready - configure providers in dashboard",
+        'SSO',
+        'manual',
+        'SSO ready - configure providers in dashboard',
         { organizationId: org.id },
-        `https://dashboard.workos.com/environment_01K5K3Y79TXRCBAA52TCYZ5CCA/organizations/${org.id}/sso`
+        `https://dashboard.workos.com/environment_01K5K3Y79TXRCBAA52TCYZ5CCA/organizations/${org.id}/sso`,
       );
     } else {
-      recordResult("SSO", "partial", "No organizations found - create organization first");
+      recordResult(
+        'SSO',
+        'partial',
+        'No organizations found - create organization first',
+      );
     }
   } catch (error) {
-    recordResult("SSO", "failed", `Failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+    recordResult(
+      'SSO',
+      'failed',
+      `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }
 
 async function testDirectorySync(workos: WorkOS) {
   try {
-    const directories = await workos.directorySync.listDirectories({ limit: 10 });
+    const directories = await workos.directorySync.listDirectories({
+      limit: 10,
+    });
     if (directories.data.length > 0) {
       recordResult(
-        "Directory Sync",
-        "completed",
+        'Directory Sync',
+        'completed',
         `Found ${directories.data.length} directory sync connection(s)`,
-        { count: directories.data.length }
+        { count: directories.data.length },
       );
     } else {
       recordResult(
-        "Directory Sync",
-        "manual",
-        "No directories configured - set up in dashboard",
+        'Directory Sync',
+        'manual',
+        'No directories configured - set up in dashboard',
         {},
-        "https://dashboard.workos.com/environment_01K5K3Y79TXRCBAA52TCYZ5CCA/organizations/{org_id}/directory-sync"
+        'https://dashboard.workos.com/environment_01K5K3Y79TXRCBAA52TCYZ5CCA/organizations/{org_id}/directory-sync',
       );
     }
   } catch (error) {
-    recordResult("Directory Sync", "failed", `Failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+    recordResult(
+      'Directory Sync',
+      'failed',
+      `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }
 
@@ -241,13 +270,17 @@ async function testAuditLogs(workos: WorkOS) {
   try {
     const events = await workos.auditLogs.listEvents({ limit: 10 });
     recordResult(
-      "Audit Logs",
-      "completed",
+      'Audit Logs',
+      'completed',
       `Audit logs enabled - found ${events.data.length} event(s)`,
-      { count: events.data.length }
+      { count: events.data.length },
     );
   } catch (error) {
-    recordResult("Audit Logs", "failed", `Failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+    recordResult(
+      'Audit Logs',
+      'failed',
+      `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }
 
@@ -258,54 +291,58 @@ async function testAdminPortal(workos: WorkOS) {
       const org = orgs.data[0];
       const link = await workos.portal.generateLink({
         organization: org.id,
-        intent: "user_management",
+        intent: 'user_management',
       });
       recordResult(
-        "Admin Portal",
-        "completed",
-        "Admin portal link generated successfully",
-        { link: link.substring(0, 80) + "..." }
+        'Admin Portal',
+        'completed',
+        'Admin portal link generated successfully',
+        { link: link.substring(0, 80) + '...' },
       );
     } else {
-      recordResult("Admin Portal", "partial", "No organizations found");
+      recordResult('Admin Portal', 'partial', 'No organizations found');
     }
   } catch (error) {
-    recordResult("Admin Portal", "failed", `Failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+    recordResult(
+      'Admin Portal',
+      'failed',
+      `Failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }
 
 async function testWebhooks() {
   const webhookUrl = process.env.WORKOS_WEBHOOK_URL;
   if (webhookUrl) {
-    if (webhookUrl.startsWith("https://")) {
+    if (webhookUrl.startsWith('https://')) {
       recordResult(
-        "Webhooks",
-        "completed",
+        'Webhooks',
+        'completed',
         `Webhook endpoint configured: ${webhookUrl}`,
-        { url: webhookUrl }
+        { url: webhookUrl },
       );
     } else {
       recordResult(
-        "Webhooks",
-        "partial",
+        'Webhooks',
+        'partial',
         `Webhook configured but using HTTP: ${webhookUrl}`,
-        { url: webhookUrl, recommendation: "Use HTTPS in production" }
+        { url: webhookUrl, recommendation: 'Use HTTPS in production' },
       );
     }
   } else {
-    recordResult("Webhooks", "partial", "Webhook URL not configured");
+    recordResult('Webhooks', 'partial', 'Webhook URL not configured');
   }
 }
 
 function printSummary() {
-  console.log("\n" + "=".repeat(80));
-  console.log("📊 Implementation Summary");
-  console.log("=".repeat(80));
+  console.log('\n' + '='.repeat(80));
+  console.log('📊 Implementation Summary');
+  console.log('='.repeat(80));
 
-  const completed = results.filter((r) => r.status === "completed").length;
-  const partial = results.filter((r) => r.status === "partial").length;
-  const manual = results.filter((r) => r.status === "manual").length;
-  const failed = results.filter((r) => r.status === "failed").length;
+  const completed = results.filter((r) => r.status === 'completed').length;
+  const partial = results.filter((r) => r.status === 'partial').length;
+  const manual = results.filter((r) => r.status === 'manual').length;
+  const failed = results.filter((r) => r.status === 'failed').length;
 
   console.log(`\n✅ Completed: ${completed}`);
   console.log(`⚠️  Partial: ${partial}`);
@@ -313,9 +350,9 @@ function printSummary() {
   console.log(`❌ Failed: ${failed}`);
 
   if (manual > 0) {
-    console.log("\n📝 Manual Configuration Required:");
+    console.log('\n📝 Manual Configuration Required:');
     results
-      .filter((r) => r.status === "manual")
+      .filter((r) => r.status === 'manual')
       .forEach((r) => {
         console.log(`  - ${r.feature}: ${r.message}`);
         if (r.dashboardUrl) {
@@ -325,25 +362,24 @@ function printSummary() {
   }
 
   if (failed > 0) {
-    console.log("\n❌ Failed Implementations:");
+    console.log('\n❌ Failed Implementations:');
     results
-      .filter((r) => r.status === "failed")
+      .filter((r) => r.status === 'failed')
       .forEach((r) => {
         console.log(`  - ${r.feature}: ${r.message}`);
       });
   }
 
-  console.log("\n📚 Next Steps:");
-  console.log("  1. Complete manual configurations in dashboard");
-  console.log("  2. Follow WORKOS_STEP_BY_STEP_SETUP.md for detailed guides");
-  console.log("  3. Test all features");
-  console.log("  4. Run validation: pnpm run check:workos:practices");
-  console.log("\n");
+  console.log('\n📚 Next Steps:');
+  console.log('  1. Complete manual configurations in dashboard');
+  console.log('  2. Follow WORKOS_STEP_BY_STEP_SETUP.md for detailed guides');
+  console.log('  3. Test all features');
+  console.log('  4. Run validation: pnpm run check:workos:practices');
+  console.log('\n');
 }
 
 // Run the script
 main().catch((error) => {
-  console.error("Fatal error:", error);
+  console.error('Fatal error:', error);
   process.exit(1);
 });
-

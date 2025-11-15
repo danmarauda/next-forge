@@ -1,14 +1,14 @@
+import { getSession } from 'better-auth-convex';
+import { ConvexError } from 'convex/values';
+import { entsTableFactory } from 'convex-ents';
 import { internal } from './_generated/api';
 import type { Doc, Id } from './_generated/dataModel';
 import type { MutationCtx, QueryCtx } from './_generated/server';
 import { internalQuery } from './_generated/server';
 import type { AuthCtx, CtxWithTable } from './functions';
 import { getProduct, productToPlan } from './polar/product';
-import type { Ent, EntWriter } from './shared/types';
-import { getSession } from 'better-auth-convex';
-import { ConvexError } from 'convex/values';
-import { entsTableFactory } from 'convex-ents';
 import { entDefinitions } from './schema';
+import type { Ent, EntWriter } from './shared/types';
 
 export type SessionUser = Omit<Doc<'user'>, '_creationTime' | '_id'> & {
   id: Id<'user'>;
@@ -94,7 +94,7 @@ const getSessionData = async (ctx: CtxWithTable<MutationCtx>) => {
 
 // Query to fetch user data for session/auth checks
 export const getSessionUser = async (
-  ctx: CtxWithTable<QueryCtx>
+  ctx: CtxWithTable<QueryCtx>,
 ): Promise<(Ent<'user'> & SessionUser) | null> => {
   const { activeOrganization, impersonatedBy, isAdmin, plan, session, user } =
     (await getSessionData(ctx as any)) ?? ({} as never);
@@ -118,7 +118,7 @@ export const getSessionUser = async (
 };
 
 export const getSessionUserWriter = async (
-  ctx: CtxWithTable<MutationCtx>
+  ctx: CtxWithTable<MutationCtx>,
 ): Promise<(EntWriter<'user'> & SessionUser) | null> => {
   const { activeOrganization, impersonatedBy, isAdmin, plan, session, user } =
     (await getSessionData(ctx)) ?? ({} as never);
@@ -154,7 +154,7 @@ export const createUser = async (
     image?: string | null;
     location?: string | null;
     role?: 'admin' | 'user';
-  }
+  },
 ) => {
   // WARNING: This bypasses Better Auth hooks including:
   const now = new Date();
@@ -200,7 +200,7 @@ export const createUser = async (
 export const hasPermission = async (
   ctx: AuthCtx,
   body: Parameters<typeof ctx.auth.api.hasPermission>[0]['body'],
-  shouldThrow = true
+  shouldThrow = true,
 ) => {
   const canUpdate = await ctx.auth.api.hasPermission({
     body,
@@ -238,8 +238,11 @@ export const internalGetSessionUser = internalQuery({
           return null;
         }
 
-        const subscription = await table('subscriptions')
-          .get('organizationId_status', activeOrganizationId, 'active');
+        const subscription = await table('subscriptions').get(
+          'organizationId_status',
+          activeOrganizationId,
+          'active',
+        );
 
         if (!subscription) {
           return null;
@@ -265,8 +268,11 @@ export const internalGetSessionUser = internalQuery({
 
       const [activeOrg, currentMember] = await Promise.all([
         table('organization').getX(activeOrganizationId),
-        table('member')
-          .get('organizationId_userId', activeOrganizationId, session.userId as Id<'user'>),
+        table('member').get(
+          'organizationId_userId',
+          activeOrganizationId,
+          session.userId as Id<'user'>,
+        ),
       ]);
 
       return {

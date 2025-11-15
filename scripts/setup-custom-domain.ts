@@ -1,9 +1,9 @@
 #!/usr/bin/env tsx
 /**
  * Setup Custom Domain for Vercel Project
- * 
+ *
  * This script configures ara.aliaslabs.ai as the production domain
- * 
+ *
  * Usage:
  *   VERCEL_TOKEN=your-token tsx scripts/setup-custom-domain.ts
  */
@@ -40,27 +40,30 @@ async function addDomain() {
 
   if (!response.ok) {
     const error = await response.text();
-    
+
     // Domain might already exist
     if (response.status === 409) {
       console.log('✅ Domain already added to project');
       return;
     }
-    
+
     throw new Error(`Failed to add domain: ${error}`);
   }
 
   const data = await response.json();
   console.log('✅ Domain added successfully!');
   console.log(`   Domain: ${data.name}`);
-  
+
   return data;
 }
 
 async function getDomainConfig() {
   console.log('\n📋 Getting DNS configuration...\n');
 
-  const url = new URL(`/v9/projects/${PROJECT_ID}/domains/${DOMAIN}/config`, VERCEL_API);
+  const url = new URL(
+    `/v9/projects/${PROJECT_ID}/domains/${DOMAIN}/config`,
+    VERCEL_API,
+  );
   url.searchParams.set('teamId', TEAM_ID);
 
   const response = await fetch(url.toString(), {
@@ -75,9 +78,9 @@ async function getDomainConfig() {
   }
 
   const data = await response.json();
-  
+
   console.log('DNS Records Required:\n');
-  
+
   if (data.misconfigured) {
     console.log('⚠️  Domain is not configured correctly\n');
   }
@@ -102,7 +105,10 @@ async function getDomainConfig() {
 async function verifyDomain() {
   console.log('🔍 Verifying domain...\n');
 
-  const url = new URL(`/v9/projects/${PROJECT_ID}/domains/${DOMAIN}/verify`, VERCEL_API);
+  const url = new URL(
+    `/v9/projects/${PROJECT_ID}/domains/${DOMAIN}/verify`,
+    VERCEL_API,
+  );
   url.searchParams.set('teamId', TEAM_ID);
 
   const response = await fetch(url.toString(), {
@@ -120,7 +126,7 @@ async function verifyDomain() {
   }
 
   const data = await response.json();
-  
+
   if (data.verified) {
     console.log('✅ Domain verified successfully!');
     return true;
@@ -151,11 +157,15 @@ async function main() {
     console.log('\n📝 Next Steps:\n');
 
     if (!verified) {
-      console.log('1. Add the DNS records shown above to your domain registrar');
+      console.log(
+        '1. Add the DNS records shown above to your domain registrar',
+      );
       console.log('2. Wait for DNS propagation (up to 48 hours)');
       console.log('3. Run this script again to verify');
       console.log('\nDNS Setup Guide:');
-      console.log('   - Go to your domain registrar (e.g., Cloudflare, Namecheap)');
+      console.log(
+        '   - Go to your domain registrar (e.g., Cloudflare, Namecheap)',
+      );
       console.log('   - Navigate to DNS settings for aliaslabs.ai');
       console.log('   - Add the CNAME or A record as shown above');
       console.log('   - Save changes');
@@ -166,7 +176,6 @@ async function main() {
     }
 
     console.log('\n' + '='.repeat(60) + '\n');
-
   } catch (error: any) {
     console.error('\n❌ Error:', error.message);
     process.exit(1);
@@ -174,4 +183,3 @@ async function main() {
 }
 
 main();
-

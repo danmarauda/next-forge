@@ -1,6 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "ignoreCommand": "node scripts/skip-ci.js",
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm build",
+  "framework": "nextjs",
   "rewrites": [
     {
       "source": "/api/:path*",

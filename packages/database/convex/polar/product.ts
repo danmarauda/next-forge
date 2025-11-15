@@ -29,7 +29,7 @@ export const polarProductSchema = z.object({
       productId: z.string(),
       recurringInterval: z.enum(['month', 'year']).nullable().optional(),
       type: z.string().optional(),
-    })
+    }),
   ),
   productId: z.string(),
   recurringInterval: z.enum(['month', 'year']).nullable().optional(),

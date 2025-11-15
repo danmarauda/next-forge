@@ -35,7 +35,7 @@ export const sendOrganizationInviteEmail = action({
         organizationName={args.organizationName}
         role={args.role}
         to={args.to}
-      />
+      />,
     );
 
     const emailId = await resend.sendEmail(ctx, {

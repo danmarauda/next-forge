@@ -1,14 +1,58 @@
-import type { AuthCtx } from './functions';
+import { v } from 'convex/values';
 import { entsTableFactory } from 'convex-ents';
 import { asyncMap } from 'convex-helpers';
 import type { Id } from './_generated/dataModel';
 import type { MutationCtx, QueryCtx } from './_generated/server';
+import { mutation, query } from './_generated/server';
+import type { AuthCtx } from './functions';
 
 import { entDefinitions } from './schema';
 
-export const listUserOrganizations = async (
+/**
+ * List all organizations for a user
+ */
+export const listUserOrganizations = query({
+  args: { userId: v.id('user') },
+  handler: async (ctx, args) => {
+    const table = entsTableFactory(ctx as any, entDefinitions);
+    const user = await (table as any)('user').get(args.userId);
+
+    if (!user) {
+      return [];
+    }
+
+    const memberships = await user.edge('members');
+
+    if (!memberships.length) {
+      return [];
+    }
+
+    return asyncMap(memberships, async (membership: any) => {
+      const org = await membership.edgeX('organization');
+      const doc = org.doc();
+
+      return {
+        _id: org._id,
+        _creationTime: org._creationTime,
+        name: doc.name,
+        slug: doc.slug,
+        logo: doc.logo,
+        logoUrl: doc.logoUrl,
+        primaryColor: doc.primaryColor,
+        secondaryColor: doc.secondaryColor,
+        subdomain: doc.subdomain,
+        role: membership.role || 'member',
+      };
+    });
+  },
+});
+
+/**
+ * Helper function for internal use
+ */
+export const listUserOrganizationsHelper = async (
   ctx: AuthCtx<QueryCtx | MutationCtx>,
-  userId: Id<'user'>
+  userId: Id<'user'>,
 ) => {
   const table = entsTableFactory(ctx as any, entDefinitions);
   const user = await (table as any)('user').getX(userId);
@@ -37,7 +81,7 @@ export const createPersonalOrganization = async (
     image: string | null;
     name: string;
     userId: Id<'user'>;
-  }
+  },
 ) => {
   const table = entsTableFactory(ctx, entDefinitions);
   // Check if user already has any organizations

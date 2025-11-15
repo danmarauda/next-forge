@@ -1,23 +1,23 @@
-import type { WorkOS } from "@workos-inc/node";
-import type { BaseWorkOSService, WorkOSServiceConfig } from "../types";
+import type { WorkOS } from '@workos-inc/node';
+import type { BaseWorkOSService, WorkOSServiceConfig } from '../types';
 
 /**
  * User Management Service
- * 
+ *
  * Handles WorkOS AuthKit user management operations.
  * Feature flag: workos.auth.enabled
  */
 export class UserManagementService implements BaseWorkOSService {
   constructor(
     private client: WorkOS,
-    private config: WorkOSServiceConfig
+    private config: WorkOSServiceConfig,
   ) {}
 
   isEnabled(): boolean {
     // Check environment variable override
     const envEnabled = process.env.NEXT_PUBLIC_WORKOS_AUTH_ENABLED;
     if (envEnabled !== undefined) {
-      return envEnabled === "true" || envEnabled === "1";
+      return envEnabled === 'true' || envEnabled === '1';
     }
     return this.config.enabled;
   }
@@ -34,7 +34,7 @@ export class UserManagementService implements BaseWorkOSService {
     state?: string;
   }): Promise<string> {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS User Management is not enabled");
+      throw new Error('WorkOS User Management is not enabled');
     }
 
     const env = process.env;
@@ -50,7 +50,7 @@ export class UserManagementService implements BaseWorkOSService {
    */
   async authenticateWithCode(code: string) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS User Management is not enabled");
+      throw new Error('WorkOS User Management is not enabled');
     }
 
     const env = process.env;
@@ -65,7 +65,7 @@ export class UserManagementService implements BaseWorkOSService {
    */
   async getUser(userId: string) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS User Management is not enabled");
+      throw new Error('WorkOS User Management is not enabled');
     }
 
     return this.client.userManagement.getUser(userId);
@@ -80,7 +80,7 @@ export class UserManagementService implements BaseWorkOSService {
     limit?: number;
   }) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS User Management is not enabled");
+      throw new Error('WorkOS User Management is not enabled');
     }
 
     return this.client.userManagement.listUsers(options);
@@ -96,7 +96,7 @@ export class UserManagementService implements BaseWorkOSService {
     emailVerified?: boolean;
   }) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS User Management is not enabled");
+      throw new Error('WorkOS User Management is not enabled');
     }
 
     return this.client.userManagement.createUser(user);
@@ -105,14 +105,17 @@ export class UserManagementService implements BaseWorkOSService {
   /**
    * Update user
    */
-  async updateUser(userId: string, updates: {
-    firstName?: string;
-    lastName?: string;
-    emailVerified?: boolean;
-    profilePictureUrl?: string;
-  }) {
+  async updateUser(
+    userId: string,
+    updates: {
+      firstName?: string;
+      lastName?: string;
+      emailVerified?: boolean;
+      profilePictureUrl?: string;
+    },
+  ) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS User Management is not enabled");
+      throw new Error('WorkOS User Management is not enabled');
     }
 
     return this.client.userManagement.updateUser(userId, updates);
@@ -123,10 +126,9 @@ export class UserManagementService implements BaseWorkOSService {
    */
   async deleteUser(userId: string) {
     if (!this.isEnabled()) {
-      throw new Error("WorkOS User Management is not enabled");
+      throw new Error('WorkOS User Management is not enabled');
     }
 
     return this.client.userManagement.deleteUser(userId);
   }
 }
-

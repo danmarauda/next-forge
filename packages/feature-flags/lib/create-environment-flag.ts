@@ -1,14 +1,16 @@
-import { flag } from "flags/next";
+import { flag } from 'flags/next';
 
 /**
  * Creates an environment-based feature flag that checks the current environment
  */
-export const createEnvironmentFlag = (environment: "production" | "staging" | "development") => {
+export const createEnvironmentFlag = (
+  environment: 'production' | 'staging' | 'development',
+) => {
   return flag({
     key: `environment.${environment}`,
     defaultValue: false,
     async decide() {
-      const nodeEnv = process.env.NODE_ENV || "development";
+      const nodeEnv = process.env.NODE_ENV || 'development';
       const vercelEnv = process.env.VERCEL_ENV;
 
       // Check Vercel environment first (more reliable)
@@ -17,18 +19,17 @@ export const createEnvironmentFlag = (environment: "production" | "staging" | "d
       }
 
       // Fallback to NODE_ENV
-      if (environment === "production") {
-        return nodeEnv === "production";
+      if (environment === 'production') {
+        return nodeEnv === 'production';
       }
-      if (environment === "staging") {
-        return nodeEnv === "staging" || nodeEnv === "test";
+      if (environment === 'staging') {
+        return nodeEnv === 'staging' || nodeEnv === 'test';
       }
-      if (environment === "development") {
-        return nodeEnv === "development" || !nodeEnv;
+      if (environment === 'development') {
+        return nodeEnv === 'development' || !nodeEnv;
       }
 
       return false;
     },
   });
 };
-

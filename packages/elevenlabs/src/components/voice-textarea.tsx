@@ -31,7 +31,7 @@ export const VoiceTextarea = React.forwardRef<
       onChange,
       ...props
     },
-    ref
+    ref,
   ) => {
     const handleVoiceTranscript = (text: string) => {
       if (onVoiceTranscript) {
@@ -78,7 +78,7 @@ export const VoiceTextarea = React.forwardRef<
         </div>
       </div>
     );
-  }
+  },
 );
 
 VoiceTextarea.displayName = 'VoiceTextarea';

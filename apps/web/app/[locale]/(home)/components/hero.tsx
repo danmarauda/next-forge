@@ -1,10 +1,10 @@
-import { blog } from "@repo/cms";
-import { Feed } from "@repo/cms/components/feed";
-import { Button } from "@repo/design-system/components/ui/button";
-import type { Dictionary } from "@repo/internationalization";
-import { MoveRight, PhoneCall } from "lucide-react";
-import Link from "next/link";
-import { env } from "@/env";
+import { blog } from '@repo/cms';
+import { Feed } from '@repo/cms/components/feed';
+import { Button } from '@repo/design-system/components/ui/button';
+import type { Dictionary } from '@repo/internationalization';
+import { MoveRight, PhoneCall } from 'lucide-react';
+import Link from 'next/link';
+import { env } from '@/env';
 
 type HeroProps = {
   dictionary: Dictionary;
@@ -18,12 +18,12 @@ export const Hero = async ({ dictionary }: HeroProps) => (
           <Feed queries={[blog.latestPostQuery]}>
             {/* biome-ignore lint/suspicious/useAwait: "Server Actions must be async" */}
             {async ([data]) => {
-              "use server";
+              'use server';
 
               return (
                 <Button asChild className="gap-4" size="sm" variant="secondary">
                   <Link href={`/blog/${data.blog.posts.item?._slug}`}>
-                    {dictionary.web.home.hero.announcement}{" "}
+                    {dictionary.web.home.hero.announcement}{' '}
                     <MoveRight className="h-4 w-4" />
                   </Link>
                 </Button>

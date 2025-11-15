@@ -2,7 +2,7 @@
 
 /**
  * WorkOS Test Script
- * 
+ *
  * Tests WorkOS integration after setup:
  * - Verifies API connection
  * - Tests user creation
@@ -10,23 +10,23 @@
  * - Tests authentication flow
  */
 
-import { WorkOS } from "@workos-inc/node";
-import { config } from "dotenv";
-import { join } from "path";
+import { WorkOS } from '@workos-inc/node';
+import { config } from 'dotenv';
+import { join } from 'path';
 
 // Load environment variables
-config({ path: join(process.cwd(), "apps/app/.env.local") });
-config({ path: join(process.cwd(), "packages/database/.env.local") });
+config({ path: join(process.cwd(), 'apps/app/.env.local') });
+config({ path: join(process.cwd(), 'packages/database/.env.local') });
 
 async function main() {
-  console.log("🧪 Testing WorkOS Integration...\n");
+  console.log('🧪 Testing WorkOS Integration...\n');
 
   const apiKey = process.env.WORKOS_API_KEY;
   const clientId = process.env.WORKOS_CLIENT_ID;
 
   if (!apiKey || !clientId) {
-    console.error("❌ Missing required environment variables");
-    console.error("   Required: WORKOS_API_KEY, WORKOS_CLIENT_ID");
+    console.error('❌ Missing required environment variables');
+    console.error('   Required: WORKOS_API_KEY, WORKOS_CLIENT_ID');
     process.exit(1);
   }
 
@@ -34,16 +34,18 @@ async function main() {
 
   const tests = [
     {
-      name: "API Connection",
+      name: 'API Connection',
       test: async () => {
         await workos.organizations.listOrganizations({ limit: 1 });
-        return { success: true, message: "API connection successful" };
+        return { success: true, message: 'API connection successful' };
       },
     },
     {
-      name: "List Organizations",
+      name: 'List Organizations',
       test: async () => {
-        const orgs = await workos.organizations.listOrganizations({ limit: 10 });
+        const orgs = await workos.organizations.listOrganizations({
+          limit: 10,
+        });
         return {
           success: true,
           message: `Found ${orgs.data.length} organization(s)`,
@@ -52,7 +54,7 @@ async function main() {
       },
     },
     {
-      name: "List Users",
+      name: 'List Users',
       test: async () => {
         const users = await workos.userManagement.listUsers({ limit: 10 });
         return {
@@ -63,16 +65,18 @@ async function main() {
       },
     },
     {
-      name: "Get Authorization URL",
+      name: 'Get Authorization URL',
       test: async () => {
-        const redirectUri = process.env.WORKOS_REDIRECT_URI || "http://localhost:3000/auth/callback";
+        const redirectUri =
+          process.env.WORKOS_REDIRECT_URI ||
+          'http://localhost:3000/auth/callback';
         const url = workos.userManagement.getAuthorizationUrl({
           clientId,
           redirectUri,
         });
         return {
           success: true,
-          message: "Authorization URL generated",
+          message: 'Authorization URL generated',
           data: { url },
         };
       },
@@ -103,15 +107,17 @@ async function main() {
         failed++;
       }
     } catch (error) {
-      console.log(`  ❌ Failed: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.log(
+        `  ❌ Failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
       failed++;
     }
     console.log();
   }
 
-  console.log("=".repeat(60));
+  console.log('='.repeat(60));
   console.log(`Tests: ${passed} passed, ${failed} failed`);
-  console.log("=".repeat(60));
+  console.log('='.repeat(60));
 
   if (failed > 0) {
     process.exit(1);
@@ -119,7 +125,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error("Fatal error:", error);
+  console.error('Fatal error:', error);
   process.exit(1);
 });
-

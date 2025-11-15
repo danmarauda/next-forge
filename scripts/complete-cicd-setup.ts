@@ -50,9 +50,7 @@ async function main() {
   log('\n🚀 Completing CI/CD Setup\n', colors.green);
 
   // Read Vercel config
-  const projectJson = JSON.parse(
-    readFileSync('.vercel/project.json', 'utf-8')
-  );
+  const projectJson = JSON.parse(readFileSync('.vercel/project.json', 'utf-8'));
   const { projectId, orgId } = projectJson;
 
   success(`Vercel project: ${projectId}`);
@@ -60,7 +58,7 @@ async function main() {
 
   // Set up Convex deployments
   info('\nSetting up Convex deployments...');
-  
+
   const convexDir = resolve(process.cwd(), 'packages/database');
   process.chdir(convexDir);
 
@@ -79,7 +77,10 @@ async function main() {
 
   try {
     info('Creating staging deployment...');
-    const stagingOutput = exec('convex deploy --preview-name staging --yes 2>&1', true);
+    const stagingOutput = exec(
+      'convex deploy --preview-name staging --yes 2>&1',
+      true,
+    );
     const stagingMatch = stagingOutput.match(/Deployment name: ([^\s]+)/);
     stagingDeployment = stagingMatch ? stagingMatch[1] : '';
     success(`Staging deployment: ${stagingDeployment}`);
@@ -211,4 +212,3 @@ main().catch((err) => {
   error(`Setup failed: ${err.message}`);
   process.exit(1);
 });
-

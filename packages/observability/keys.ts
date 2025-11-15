@@ -1,5 +1,5 @@
-import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "zod";
+import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
 
 export const keys = () =>
   createEnv({
@@ -13,7 +13,11 @@ export const keys = () =>
     },
     client: {
       // Added by Sentry Integration, Vercel Marketplace
-      NEXT_PUBLIC_SENTRY_DSN: z.url().optional(),
+      NEXT_PUBLIC_SENTRY_DSN: z
+        .string()
+        .url()
+        .or(z.string().length(0))
+        .optional(),
     },
     runtimeEnv: {
       BETTERSTACK_API_KEY: process.env.BETTERSTACK_API_KEY,

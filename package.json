@@ -88,6 +88,10 @@
       "core-js-pure",
       "prisma",
       "sharp"
+    ],
+    "onlyBuiltDependencies": [
+      "bufferutil",
+      "esbuild"
     ]
   },
   "type": "module"

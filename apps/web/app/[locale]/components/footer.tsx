@@ -1,33 +1,33 @@
-import { legal } from "@repo/cms";
-import { Feed } from "@repo/cms/components/feed";
-import { Status } from "@repo/observability/status";
-import Link from "next/link";
-import { env } from "@/env";
+import { legal } from '@repo/cms';
+import { Feed } from '@repo/cms/components/feed';
+import { Status } from '@repo/observability/status';
+import Link from 'next/link';
+import { env } from '@/env';
 
 export const Footer = () => (
   <Feed queries={[legal.postsQuery]}>
     {async ([data]) => {
-      "use server";
+      'use server';
 
       const navigationItems = [
         {
-          title: "Home",
-          href: "/",
-          description: "",
+          title: 'Home',
+          href: '/',
+          description: '',
         },
         {
-          title: "Pages",
-          description: "Managing a small business today is already tough.",
+          title: 'Pages',
+          description: 'Managing a small business today is already tough.',
           items: [
             {
-              title: "Blog",
-              href: "/blog",
+              title: 'Blog',
+              href: '/blog',
             },
           ],
         },
         {
-          title: "Legal",
-          description: "We stay on top of the latest legal requirements.",
+          title: 'Legal',
+          description: 'We stay on top of the latest legal requirements.',
           items: data.legalPages.items.map((post) => ({
             title: post._title,
             href: `/legal/${post._slug}`,
@@ -37,7 +37,7 @@ export const Footer = () => (
 
       if (env.NEXT_PUBLIC_DOCS_URL) {
         navigationItems.at(1)?.items?.push({
-          title: "Docs",
+          title: 'Docs',
           href: env.NEXT_PUBLIC_DOCS_URL,
         });
       }
@@ -70,12 +70,12 @@ export const Footer = () => (
                             className="flex items-center justify-between"
                             href={item.href}
                             rel={
-                              item.href.includes("http")
-                                ? "noopener noreferrer"
+                              item.href.includes('http')
+                                ? 'noopener noreferrer'
                                 : undefined
                             }
                             target={
-                              item.href.includes("http") ? "_blank" : undefined
+                              item.href.includes('http') ? '_blank' : undefined
                             }
                           >
                             <span className="text-xl">{item.title}</span>
@@ -89,13 +89,13 @@ export const Footer = () => (
                             href={subItem.href}
                             key={subItem.title}
                             rel={
-                              subItem.href.includes("http")
-                                ? "noopener noreferrer"
+                              subItem.href.includes('http')
+                                ? 'noopener noreferrer'
                                 : undefined
                             }
                             target={
-                              subItem.href.includes("http")
-                                ? "_blank"
+                              subItem.href.includes('http')
+                                ? '_blank'
                                 : undefined
                             }
                           >

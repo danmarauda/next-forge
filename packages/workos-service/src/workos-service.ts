@@ -1,16 +1,16 @@
-import { getWorkOS } from "@repo/database/convex/workos";
-import type { WorkOS } from "@workos-inc/node";
-import { UserManagementService } from "./services/user-management";
-import { SSOService } from "./services/sso";
-import { DirectorySyncService } from "./services/directory-sync";
-import { AuditLogsService } from "./services/audit-logs";
-import { AdminPortalService } from "./services/admin-portal";
-import { FGAService } from "./services/fga";
-import type { WorkOSServiceConfig } from "./types";
+import { getWorkOS } from '@repo/database/convex/workos';
+import type { WorkOS } from '@workos-inc/node';
+import { AdminPortalService } from './services/admin-portal';
+import { AuditLogsService } from './services/audit-logs';
+import { DirectorySyncService } from './services/directory-sync';
+import { FGAService } from './services/fga';
+import { SSOService } from './services/sso';
+import { UserManagementService } from './services/user-management';
+import type { WorkOSServiceConfig } from './types';
 
 /**
  * Unified WorkOS Service
- * 
+ *
  * Provides access to all WorkOS features through a single service interface.
  * All features are feature-flag enabled and can be toggled independently.
  */
@@ -60,8 +60,7 @@ export class WorkOSService {
  * Create a WorkOS service instance
  */
 export function createWorkOSService(
-  config?: Partial<WorkOSServiceConfig>
+  config?: Partial<WorkOSServiceConfig>,
 ): WorkOSService {
   return new WorkOSService(config);
 }
-

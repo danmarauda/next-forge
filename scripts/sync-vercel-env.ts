@@ -1,15 +1,15 @@
 #!/usr/bin/env tsx
 /**
  * Sync Environment Variables to Vercel
- * 
+ *
  * This script reads environment variables from .env files and syncs them to Vercel.
- * 
+ *
  * Usage:
  *   pnpm sync:env:dev      # Sync development env vars
  *   pnpm sync:env:staging  # Sync staging env vars
  *   pnpm sync:env:prod     # Sync production env vars
  *   pnpm sync:env:all      # Sync all environments
- * 
+ *
  * Requirements:
  *   - VERCEL_TOKEN environment variable must be set
  *   - VERCEL_PROJECT_ID environment variable must be set
@@ -17,7 +17,7 @@
  */
 
 import { readFileSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -59,7 +59,7 @@ function parseEnvFile(filePath: string): Record<string, string> {
 
     for (const line of content.split('\n')) {
       const trimmed = line.trim();
-      
+
       // Skip comments and empty lines
       if (!trimmed || trimmed.startsWith('#')) continue;
 
@@ -116,13 +116,13 @@ async function upsertEnvVar(
   key: string,
   value: string,
   target: ('production' | 'preview' | 'development')[],
-  existingId?: string
+  existingId?: string,
 ): Promise<void> {
   const url = new URL(
     existingId
       ? `/v9/projects/${VERCEL_PROJECT_ID}/env/${existingId}`
       : `/v10/projects/${VERCEL_PROJECT_ID}/env`,
-    VERCEL_API
+    VERCEL_API,
   );
 
   if (VERCEL_TEAM_ID) {
@@ -147,7 +147,9 @@ async function upsertEnvVar(
 
   if (!response.ok) {
     const error = await response.text();
-    throw new Error(`Failed to ${existingId ? 'update' : 'create'} ${key}: ${error}`);
+    throw new Error(
+      `Failed to ${existingId ? 'update' : 'create'} ${key}: ${error}`,
+    );
   }
 }
 
@@ -156,7 +158,7 @@ async function upsertEnvVar(
  */
 async function syncEnvVars(
   envFile: string,
-  target: ('production' | 'preview' | 'development')[]
+  target: ('production' | 'preview' | 'development')[],
 ): Promise<void> {
   console.log(`\n📦 Syncing ${envFile} to Vercel (${target.join(', ')})...`);
 
@@ -226,40 +228,25 @@ async function main() {
   switch (environment) {
     case 'development':
     case 'dev':
-      await syncEnvVars(
-        resolve(rootDir, '.env.development'),
-        ['development', 'preview']
-      );
+      await syncEnvVars(resolve(rootDir, '.env.development'), [
+        'development',
+        'preview',
+      ]);
       break;
 
     case 'staging':
-      await syncEnvVars(
-        resolve(rootDir, '.env.staging'),
-        ['preview']
-      );
+      await syncEnvVars(resolve(rootDir, '.env.staging'), ['preview']);
       break;
 
     case 'production':
     case 'prod':
-      await syncEnvVars(
-        resolve(rootDir, '.env.production'),
-        ['production']
-      );
+      await syncEnvVars(resolve(rootDir, '.env.production'), ['production']);
       break;
 
     case 'all':
-      await syncEnvVars(
-        resolve(rootDir, '.env.development'),
-        ['development']
-      );
-      await syncEnvVars(
-        resolve(rootDir, '.env.staging'),
-        ['preview']
-      );
-      await syncEnvVars(
-        resolve(rootDir, '.env.production'),
-        ['production']
-      );
+      await syncEnvVars(resolve(rootDir, '.env.development'), ['development']);
+      await syncEnvVars(resolve(rootDir, '.env.staging'), ['preview']);
+      await syncEnvVars(resolve(rootDir, '.env.production'), ['production']);
       break;
 
     default:
@@ -275,4 +262,3 @@ main().catch((error) => {
   console.error('❌ Error:', error);
   process.exit(1);
 });
-

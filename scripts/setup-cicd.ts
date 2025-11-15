@@ -1,19 +1,19 @@
 #!/usr/bin/env tsx
 /**
  * Automated CI/CD Setup Script
- * 
+ *
  * This script automates the entire CI/CD setup process:
  * 1. Links Vercel project
  * 2. Creates Convex deployments
  * 3. Syncs environment variables to Vercel
  * 4. Sets up GitHub secrets
- * 
+ *
  * Usage:
  *   pnpm setup:cicd
  */
 
 import { execSync } from 'node:child_process';
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { config } from 'dotenv';
 
@@ -77,9 +77,17 @@ function checkPrerequisites() {
   info('Checking prerequisites...');
 
   const tools = [
-    { name: 'vercel', command: 'vercel --version', install: 'pnpm add -g vercel' },
+    {
+      name: 'vercel',
+      command: 'vercel --version',
+      install: 'pnpm add -g vercel',
+    },
     { name: 'gh', command: 'gh --version', install: 'brew install gh' },
-    { name: 'convex', command: 'convex --version', install: 'pnpm add -g convex' },
+    {
+      name: 'convex',
+      command: 'convex --version',
+      install: 'pnpm add -g convex',
+    },
   ];
 
   const missing: string[] = [];
@@ -149,7 +157,7 @@ function setupConvex() {
 
   // Check if already deployed
   const deployments = execSilent('convex deployments list');
-  
+
   if (deployments && deployments.includes('prod')) {
     success('Convex production deployment already exists');
   } else {
@@ -169,7 +177,7 @@ function setupConvex() {
   // Get deployment names
   const prodDeployment = exec('convex deployments list --json', true);
   const deploymentData = JSON.parse(prodDeployment);
-  
+
   const prod = deploymentData.find((d: any) => d.deploymentType === 'prod');
   const staging = deploymentData.find((d: any) => d.deploymentType === 'dev');
 
@@ -195,20 +203,46 @@ function setupGitHubSecrets(vercelConfig: any, convexConfig: any) {
   }
 
   const secrets = [
-    { name: 'VERCEL_TOKEN', value: process.env.VERCEL_TOKEN || '', required: true },
+    {
+      name: 'VERCEL_TOKEN',
+      value: process.env.VERCEL_TOKEN || '',
+      required: true,
+    },
     { name: 'VERCEL_ORG_ID', value: vercelConfig.orgId, required: true },
-    { name: 'VERCEL_PROJECT_ID', value: vercelConfig.projectId, required: true },
-    { name: 'CONVEX_DEPLOYMENT_PROD', value: convexConfig.prod, required: true },
-    { name: 'CONVEX_DEPLOYMENT_STAGING', value: convexConfig.staging, required: true },
-    { name: 'TURBO_TOKEN', value: process.env.TURBO_TOKEN || '', required: false },
-    { name: 'TURBO_TEAM', value: process.env.TURBO_TEAM || '', required: false },
+    {
+      name: 'VERCEL_PROJECT_ID',
+      value: vercelConfig.projectId,
+      required: true,
+    },
+    {
+      name: 'CONVEX_DEPLOYMENT_PROD',
+      value: convexConfig.prod,
+      required: true,
+    },
+    {
+      name: 'CONVEX_DEPLOYMENT_STAGING',
+      value: convexConfig.staging,
+      required: true,
+    },
+    {
+      name: 'TURBO_TOKEN',
+      value: process.env.TURBO_TOKEN || '',
+      required: false,
+    },
+    {
+      name: 'TURBO_TEAM',
+      value: process.env.TURBO_TEAM || '',
+      required: false,
+    },
   ];
 
   for (const secret of secrets) {
     if (!secret.value && secret.required) {
       error(`Missing required value for ${secret.name}`);
       if (secret.name === 'VERCEL_TOKEN') {
-        warn('Set VERCEL_TOKEN environment variable or get it from: https://vercel.com/account/tokens');
+        warn(
+          'Set VERCEL_TOKEN environment variable or get it from: https://vercel.com/account/tokens',
+        );
       }
       continue;
     }
@@ -273,7 +307,9 @@ function createSummary(vercelConfig: any, convexConfig: any) {
 3. ✅ GitHub secrets configured
 4. ${process.env.VERCEL_TOKEN ? '✅' : '⚠️'} Environment variables synced
 
-${!process.env.VERCEL_TOKEN ? `
+${
+  !process.env.VERCEL_TOKEN
+    ? `
 ### Manual Steps Required
 
 Set VERCEL_TOKEN and sync environment variables:
@@ -282,7 +318,9 @@ Set VERCEL_TOKEN and sync environment variables:
 export VERCEL_TOKEN="your-token"
 pnpm sync:env:all
 \`\`\`
-` : ''}
+`
+    : ''
+}
 
 ## Test Deployment
 
@@ -325,7 +363,6 @@ async function main() {
 
     log('\n✨ CI/CD setup complete!\n', colors.green);
     info('Check CICD_SETUP_COMPLETE.md for details');
-
   } catch (err: any) {
     error(`Setup failed: ${err.message}`);
     process.exit(1);
@@ -333,4 +370,3 @@ async function main() {
 }
 
 main();
-

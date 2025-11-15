@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@repo/design-system/components/ui/avatar";
+} from '@repo/design-system/components/ui/avatar';
 import {
   Carousel,
   type CarouselApi,
   CarouselContent,
   CarouselItem,
-} from "@repo/design-system/components/ui/carousel";
-import type { Dictionary } from "@repo/internationalization";
-import { User } from "lucide-react";
-import { useEffect, useState } from "react";
+} from '@repo/design-system/components/ui/carousel';
+import type { Dictionary } from '@repo/internationalization';
+import { User } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 type TestimonialsProps = {
   dictionary: Dictionary;

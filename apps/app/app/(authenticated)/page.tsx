@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
-import { Header } from "./components/header";
-import { TodoList } from "./components/todo-list";
+import type { Metadata } from 'next';
+import { Header } from './components/header';
+import { TodoList } from './components/todo-list';
 
-const title = "Acme Inc";
-const description = "My application powered by Convex.";
+const title = 'Acme Inc';
+const description = 'My application powered by Convex.';
 
 export const metadata: Metadata = {
   title,
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const App = () => (
   <>
-    <Header page="Dashboard" pages={["Building Your Application"]} />
+    <Header page="Dashboard" pages={['Building Your Application']} />
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="grid gap-4">
         <div className="rounded-xl bg-muted/50 p-6">
