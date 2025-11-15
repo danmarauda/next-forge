@@ -33,8 +33,13 @@ The ARA Group Platform is a production-ready, multi-tenant SaaS platform built o
 - ✅ Organization context provider with React hooks
 - ✅ Dynamic branding system with CSS variables
 - ✅ Organization switcher UI component
+- ✅ Organization settings UI component
+- ✅ Member management UI component
 - ✅ Middleware-based subdomain detection
-- ✅ 11 ARA Group organizations configured
+- ✅ 12 ARA Group organizations created in WorkOS
+- ✅ Organization management functions (list, create, update, delete, invite members)
+- ✅ Member role management (owner, admin, member)
+- ✅ Invitation system with 7-day expiry
 
 #### **Authentication & Authorization**
 - ✅ WorkOS AuthKit integration (migrated from Clerk)
@@ -43,10 +48,13 @@ The ARA Group Platform is a production-ready, multi-tenant SaaS platform built o
 - ✅ Passkeys support
 - ✅ SSO ready (SAML, OIDC, OAuth)
 - ✅ Directory Sync ready (SCIM)
-- ✅ Admin Portal integration
+- ✅ Admin Portal integration with helper functions
+- ✅ Admin Portal URL generation (SSO, Directory Sync, Domain Verification)
 - ✅ 9 custom roles configured (Super Admin, Admin, Manager, etc.)
 - ✅ Organization-based access control
 - ✅ Webhook handlers for all WorkOS events
+- ✅ Session management with HTTP-only cookies
+- ✅ User creation/update/deletion via webhooks
 
 #### **Database & Backend**
 - ✅ Convex 1.29.0 serverless backend
@@ -132,9 +140,27 @@ The ARA Group Platform is a production-ready, multi-tenant SaaS platform built o
 #### **Database (`@repo/database`)**
 - ✅ Convex client configuration
 - ✅ Schema definitions with Convex Ents
-- ✅ Organization management functions
+- ✅ **Complete organization management system (850+ lines)**
+  - ✅ listOrganizations - Query user's organizations
+  - ✅ getOrganization - Fetch org by ID/slug
+  - ✅ getOrganizationOverview - Stats with member counts
+  - ✅ createOrganization - Create org + add creator as owner
+  - ✅ updateOrganization - Update settings (name, subdomain, branding)
+  - ✅ setActiveOrganization - Switch user's active org
+  - ✅ listMembers - Get all members with user details
+  - ✅ inviteMember - Create invitation with email
+  - ✅ listPendingInvitations - View pending invites
+  - ✅ acceptInvitation - Accept invite and join org
+  - ✅ rejectInvitation - Decline invitation
+  - ✅ cancelInvitation - Admin cancels pending invite
+  - ✅ removeMember - Remove member (with last owner protection)
+  - ✅ leaveOrganization - Self-removal from org
+  - ✅ updateMemberRole - Change roles (owner, admin, member)
+  - ✅ deleteOrganization - Soft delete organization
 - ✅ Organization branding configuration
-- ✅ WorkOS auth integration
+- ✅ WorkOS auth integration (complete)
+- ✅ WorkOS internal mutations (sync, create, update, delete)
+- ✅ Admin Portal helper functions
 - ✅ User management
 - ✅ Todo system with comments
 - ✅ Project management
@@ -485,7 +511,7 @@ pnpm test:workos:all
 
 ### Environment Variables
 
-See `apps/app/.env.example` for the complete list of required variables.
+See `.env.template` for the complete list of all variables, or `ENVIRONMENT_SETUP.md` for detailed setup instructions.
 
 **Required for Core Functionality:**
 - `WORKOS_API_KEY` - WorkOS API key
@@ -495,6 +521,10 @@ See `apps/app/.env.example` for the complete list of required variables.
 
 **Optional (for additional features):**
 - Stripe, Resend, Sentry, PostHog, Liveblocks, ElevenLabs, etc.
+
+**Quick Reference:**
+- `.env.template` - Complete template with all variables documented
+- `ENVIRONMENT_SETUP.md` - Comprehensive setup guide with instructions
 
 ---
 
@@ -521,8 +551,10 @@ pnpm setup:workos                    # Basic WorkOS setup
 pnpm setup:workos:complete          # Complete setup
 pnpm test:workos                    # Test WorkOS
 pnpm test:workos:all                # Test all features
+pnpm test:auth:flow                 # Test end-to-end auth flow
 pnpm configure:ara-group            # Configure ARA Group
 pnpm setup:ara-organizations        # Setup organizations
+pnpm sync:workos:orgs               # Sync WorkOS orgs to Convex
 pnpm setup:ara-super-admins         # Setup super admins
 pnpm setup:ara-complete             # Complete ARA setup
 ```

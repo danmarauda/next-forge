@@ -45,7 +45,9 @@
     "list:ara-organizations": "tsx scripts/list-ara-group-organizations.ts",
     "setup:workos:auth": "tsx scripts/setup-workos-auth.ts",
     "verify:workos": "tsx scripts/verify-workos-setup.ts",
-    "create:ara:orgs": "tsx scripts/create-ara-organizations.ts"
+    "create:ara:orgs": "tsx scripts/create-ara-organizations.ts",
+    "sync:workos:orgs": "tsx scripts/sync-workos-orgs-to-convex.ts",
+    "test:auth:flow": "tsx scripts/test-auth-flow.ts"
   },
   "devDependencies": {
     "@auto-it/first-time-contributor": "^11.3.0",
@@ -71,10 +73,6 @@
     "commander": "^14.0.2"
   },
   "pnpm": {
-    "overrides": {
-      "parse5": "^7.2.1",
-      "@modelcontextprotocol/sdk": "^1.17.1"
-    },
     "peerDependencyRules": {
       "allowedVersions": {
         "zod": "^3.23.8 || ^4.0.0",
@@ -97,5 +95,13 @@
       "esbuild"
     ]
   },
-  "type": "module"
+  "type": "module",
+  "overrides": {
+    "parse5": "^7.2.1",
+    "@modelcontextprotocol/sdk": "^1.17.1"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }
